@@ -2,7 +2,9 @@
 
 ## API Keys
 
-Obtain keys through the [API dashboard](https://www.listennotes.com/api/). For multiple credentials, create multiple apps/tokens under the same account rather than creating extra accounts. Never ask the user to paste a key into chat or commit it to a repository.
+Sign up the FREE plan at the [API pricing page](https://www.listennotes.com/api/pricing/).
+
+Once you are approved, you can obtain keys through the [API dashboard](https://www.listennotes.com/api/dashboard/#apps) or the [API Docs page](https://www.listennotes.com/api/docs/). For multiple credentials, create multiple apps/tokens under the same account rather than creating extra accounts. Never ask the user to paste a key into chat or commit it to a repository.
 
 Use a distinct secret per environment when the dashboard supports it. Rotate a compromised key at the dashboard and update the secret store without changing application code.
 

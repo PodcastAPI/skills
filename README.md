@@ -1,15 +1,17 @@
-# PodcastAPI Skills
+# Podcast API Skills
 
 Agent Skills for building secure applications with the [Listen Notes Podcast API](https://www.podcastapi.com/).
 
 The `podcast-api` skill helps coding agents inspect an existing project, select the right endpoint, keep credentials server-side, implement pagination and error handling, test against the mock server, and answer API or billing questions from authoritative sources.
+
+Questions? Contact us at [hello@listennotes.com](mailto:hello@listennotes.com).
 
 ## Install
 
 ### Skills CLI
 
 ```bash
-npx skills add https://github.com/PodcastAPI/skills
+npx skills add PodcastAPI/skills
 ```
 
 ### OpenAI Codex
