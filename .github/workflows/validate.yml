@@ -1,0 +1,108 @@
+name: Validate skills
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate Agent Skill specification
+        run: >-
+          uvx
+          --from "git+https://github.com/agentskills/agentskills.git@8d8fcbc69e0c42e05922c2ffc287a3bbdef7b0a3#subdirectory=skills-ref"
+          skills-ref validate skills/podcast-api
+
+      - name: Validate repository contracts
+        shell: python
+        run: |
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path.cwd()
+          marketplace = json.loads((root / ".claude-plugin/marketplace.json").read_text())
+          plugin = json.loads((root / ".claude-plugin/plugin.json").read_text())
+          cases = json.loads((root / "evals/cases.json").read_text())
+          skill_path = root / "skills/podcast-api/SKILL.md"
+          skill = skill_path.read_text()
+
+          assert marketplace["name"] == "podcastapi"
+          assert marketplace["plugins"][0]["name"] == "podcast-api"
+          assert marketplace["plugins"][0]["source"] == "./"
+          assert plugin["name"] == "podcast-api"
+          assert plugin["version"] == "1.0.0"
+          assert "name: podcast-api" in skill
+
+          for value in (
+              "LISTEN_API_KEY",
+              "X-ListenAPI-Key",
+              "https://listen-api.listennotes.com/api/v2",
+              "https://listen-api-test.listennotes.com/api/v2",
+          ):
+              assert value in skill, f"SKILL.md is missing {value}"
+
+          references = re.findall(r"\(references/([^)]+\.md)\)", skill)
+          assert references, "SKILL.md must route to references"
+          for reference in references:
+              assert (skill_path.parent / "references" / reference).is_file(), reference
+
+          assert not (skill_path.parent / "agents/openai.yaml").exists()
+          assert len(cases) >= 6
+          assert len({case["id"] for case in cases}) == len(cases)
+          for case in cases:
+              assert case["prompt"]
+              assert case["expected"]["endpoint"]
+              assert case["expected"]["invariants"]
+
+      - name: Discover skill with skills CLI
+        run: npx --yes skills@1.5.11 add "$GITHUB_WORKSPACE" --list
+
+      - name: Smoke-test agent installations
+        shell: bash
+        run: |
+          set -euo pipefail
+          for agent in codex claude-code cursor; do
+            target="$(mktemp -d)"
+            (
+              cd "$target"
+              npx --yes skills@1.5.11 add "$GITHUB_WORKSPACE" \
+                --skill podcast-api \
+                --agent "$agent" \
+                --copy \
+                --yes
+            )
+            test "$(find "$target" -path '*/podcast-api/SKILL.md' -type f | wc -l)" -ge 1
+            test "$(find "$target" -path '*/podcast-api/references/*.md' -type f | wc -l)" -eq 9
+          done
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check documentation links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --max-retries 3
+            --exclude '^https://listen-api\.listennotes\.com/api/v2$'
+            --exclude '^https://listen-api-test\.listennotes\.com/api/v2'
+            './README.md'
+            './skills/**/*.md'
+          fail: true

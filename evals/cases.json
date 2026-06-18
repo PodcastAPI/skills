@@ -1,0 +1,105 @@
+[
+  {
+    "id": "node-search-route",
+    "prompt": "Add a Node.js backend route that searches for podcast episodes about a user-provided topic.",
+    "context": "Node.js API server using native fetch",
+    "expected": {
+      "endpoint": "GET /search",
+      "invariants": [
+        "Read LISTEN_API_KEY only on the server",
+        "Send X-ListenAPI-Key to the production API",
+        "Encode the user query with URLSearchParams or an equivalent structured API",
+        "Handle non-2xx responses without exposing the key",
+        "Do not add an SDK when native fetch already fits the project"
+      ]
+    }
+  },
+  {
+    "id": "python-all-episodes",
+    "prompt": "In this Python service, fetch all available episodes for one Listen Notes podcast ID.",
+    "context": "Python backend with an existing HTTP client",
+    "expected": {
+      "endpoint": "GET /podcasts/{id}",
+      "invariants": [
+        "Reuse the existing HTTP client",
+        "Advance with next_episode_pub_date from each response",
+        "Stop when episodes is empty or the cursor repeats",
+        "Add a configurable item or page bound",
+        "Keep LISTEN_API_KEY out of logs and source code"
+      ]
+    }
+  },
+  {
+    "id": "nextjs-transcript-route",
+    "prompt": "Add transcript retrieval for an episode to this Next.js app.",
+    "context": "Next.js App Router application",
+    "expected": {
+      "endpoint": "GET /episodes/{id}",
+      "invariants": [
+        "Verify the transcript parameter and response field in live OpenAPI",
+        "Call Podcast API from a route handler or another server-only boundary",
+        "Treat the transcript as optional",
+        "Do not expose LISTEN_API_KEY through a NEXT_PUBLIC variable",
+        "Do not claim Podcast API can transcribe every episode"
+      ]
+    }
+  },
+  {
+    "id": "mock-server-test",
+    "prompt": "Write integration tests for our Podcast API client without using our paid quota.",
+    "context": "Any server-side application",
+    "expected": {
+      "endpoint": "Mock equivalent of the selected endpoint",
+      "invariants": [
+        "Use https://listen-api-test.listennotes.com/api/v2",
+        "Omit X-ListenAPI-Key",
+        "Assert only transport, parsing, and broad response shape against the mock server",
+        "Use local mocks for filters, errors, and pagination",
+        "Do not require a production credential in CI"
+      ]
+    }
+  },
+  {
+    "id": "subscription-refresh",
+    "prompt": "Efficiently check a user's subscribed podcasts for new episodes.",
+    "context": "Backend job with database access",
+    "expected": {
+      "endpoint": "POST /podcasts, then GET /podcasts/{id} when needed",
+      "invariants": [
+        "Batch podcast IDs within the documented limit",
+        "Persist only policy-permitted IDs and publication dates on standard plans",
+        "Fetch episode pages only for podcasts whose latest publication date changed",
+        "Bound concurrency and request counts",
+        "Verify current caching terms"
+      ]
+    }
+  },
+  {
+    "id": "billing-question",
+    "prompt": "How much will we be charged if we exceed our quota, and do failed requests count?",
+    "context": "Documentation question",
+    "expected": {
+      "endpoint": "No API endpoint",
+      "invariants": [
+        "Check the live billing FAQ and pricing page before quoting numbers",
+        "Explain that current policy counts successful HTTP 200 API requests",
+        "Separate generic policy from account-specific billing state",
+        "Direct account-specific charge questions to hello@listennotes.com"
+      ]
+    }
+  },
+  {
+    "id": "browser-only-app",
+    "prompt": "Call Podcast API directly from my static React site using an environment variable.",
+    "context": "Static browser application with no backend",
+    "expected": {
+      "endpoint": "Server-side proxy required before any Podcast API endpoint",
+      "invariants": [
+        "Reject direct browser use of LISTEN_API_KEY",
+        "Add or recommend a trusted serverless or backend boundary",
+        "Do not suggest obfuscation or a public environment variable",
+        "Apply request validation and abuse controls at the proxy"
+      ]
+    }
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "podcastapi",
+  "owner": {
+    "name": "Listen Notes, Inc.",
+    "url": "https://www.podcastapi.com"
+  },
+  "plugins": [
+    {
+      "name": "podcast-api",
+      "source": "./",
+      "description": "Build secure Listen Notes Podcast API integrations with endpoint, workflow, testing, and policy guidance"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "podcast-api",
+  "description": "Build, test, and explain secure Listen Notes Podcast API integrations",
+  "version": "1.0.0",
+  "author": {
+    "name": "Listen Notes, Inc.",
+    "url": "https://www.podcastapi.com"
+  }
+}
