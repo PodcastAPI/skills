@@ -98,11 +98,14 @@ jobs:
       - name: Check documentation links
         uses: lycheeverse/lychee-action@v2
         with:
+          # These public sites intentionally reject some automated bot traffic.
           args: >-
             --no-progress
             --max-retries 3
             --exclude '^https://listen-api\.listennotes\.com/api/v2$'
             --exclude '^https://listen-api-test\.listennotes\.com/api/v2'
+            --exclude '^https://(www\.)?listennotes\.com/'
+            --exclude '^https://(www\.)?podcastapi\.com/'
             './README.md'
             './skills/**/*.md'
           fail: true
