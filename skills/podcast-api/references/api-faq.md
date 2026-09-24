@@ -41,4 +41,4 @@ Re-check the terms before implementing caching, indexing, data warehousing, or a
 
 ## SDKs
 
-Official libraries exist for several languages, but their coverage and maintenance can change. Reuse an installed official SDK when it fits the project; otherwise use direct REST calls verified against OpenAPI. Find current SDK links on the [tutorial index](https://www.listennotes.com/api/tutorials/).
+Official SDKs cover the playlist write operations as well as reads. Read [official-sdks.md](official-sdks.md) for the synchronized versions, package names, and method families. Reuse an installed SDK when its version supports the operation; otherwise upgrade compatibly or use the project's HTTP client. Kotlin and Scala use the Java package. Find live SDK links and examples in the [API docs](https://www.listennotes.com/api/docs/).

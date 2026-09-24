@@ -5,9 +5,9 @@
 Two supported designs serve different ownership needs:
 
 1. Store permitted episode IDs in the application's database, then use `POST /episodes` to hydrate bounded batches.
-2. Let human curators manage a Listen Later playlist, then use `GET /playlists/{id}` as a headless content-management feed.
+2. Use Listen Later playlists as managed collections. Curators can edit them on ListenNotes.com or through the playlist write API; the app consumes them with `GET /playlists/{id}`.
 
-For a curated feed, choose the documented episode-list or podcast-list type and page with `last_timestamp_ms`. Preserve curator notes when the response provides them. Do not permanently mirror full API responses unless the applicable plan permits server-side storage.
+For creation, metadata, notes, publication, and both podcast/episode views, read [playlist-cms.md](playlist-cms.md). This works for editorial collections owned by the admin API account. An application's end-user accounts do not automatically become Listen Notes playlist owners; keep per-user authorization in the application or use the first design for application-owned libraries. Do not permanently mirror full API responses unless the applicable plan permits server-side storage.
 
 Sources: [playlist tutorial](https://www.listennotes.help/article/45-how-to-build-a-playlist-for-episodes-in-a-podcast-app) and [human curation tutorial](https://www.listennotes.help/article/34-whats-the-easiest-way-for-our-human-content-curators-to-handpick-specific-podcasts-episodes-into-our-app-using-podcast-api).
 

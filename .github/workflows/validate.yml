@@ -87,7 +87,8 @@ jobs:
                 --yes
             )
             test "$(find "$target" -path '*/podcast-api/SKILL.md' -type f | wc -l)" -ge 1
-            test "$(find "$target" -path '*/podcast-api/references/*.md' -type f | wc -l)" -eq 9
+            expected_references="$(find "$GITHUB_WORKSPACE/skills/podcast-api/references" -name '*.md' -type f | wc -l)"
+            test "$(find "$target" -path '*/podcast-api/references/*.md' -type f | wc -l)" -eq "$expected_references"
           done
 
   links:

@@ -37,7 +37,14 @@ Use this map to find a likely operation, then verify its exact contract in the l
 | Task | Operation | Use when |
 | --- | --- | --- |
 | Playlist details and items | `GET /playlists/{id}` | Consume a Listen Later playlist as an episode or podcast list. |
-| Account playlists | `GET /playlists` | List playlists belonging to the authenticated account. |
+| Account playlists | `GET /playlists` | List playlists the API admin created or joined; membership alone does not permit writes. |
+| Create a collection | `POST /playlists` | Create a playlist with a name and optional description, visibility, and default type. |
+| Edit collection metadata | `PUT /playlists/{id}` | Update supplied name, description, visibility, or default type fields. |
+| Add an episode or podcast | `POST /playlists/{id}/items` | Add exactly one content ID with optional curator notes; reuse an existing item. |
+| Edit or clear curator notes | `PUT /playlists/{id}/items/{item_id}` | Replace notes; an explicit empty string clears them. |
+| Remove an entry | `DELETE /playlists/{id}/items/{item_id}` | Delete an item from this playlist using its integer playlist-item ID. |
+
+Use [playlist-cms.md](playlist-cms.md) for the editorial workflow, ownership, view types, and pagination. The current API has no whole-playlist deletion, custom ordering, or bulk-add endpoint. Do not confuse removing a playlist entry with `DELETE /podcasts/{id}`, which requests removal of a podcast from the directory.
 
 ## Podcaster And Insights
 

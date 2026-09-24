@@ -101,5 +101,114 @@
         "Apply request validation and abuse controls at the proxy"
       ]
     }
+  },
+  {
+    "id": "episode-curation-cms",
+    "prompt": "Use Listen Notes as a headless CMS for our weekly handpicked episodes page. Our editors need to create a collection, add episodes with blurbs, and publish it.",
+    "context": "Node 22 backend using podcast-api 3.0.2; browser editor UI; implementation only",
+    "expected": {
+      "endpoint": "POST /playlists; POST /playlists/{id}/items; PUT /playlists/{id}; GET /playlists/{id}",
+      "invariants": [
+        "Use a playlist owned by the admin API account as the editorial collection",
+        "Explicitly create with private visibility for an unpublished collection because the API defaults to public",
+        "Use episode_list and exactly one episode_id per add request, with notes for the blurb",
+        "Use Client parameter objects and response.data; retain returned playlist and item IDs",
+        "Expose editor actions through an authenticated and authorized backend without leaking LISTEN_API_KEY",
+        "Publish through an explicit visibility update; do not claim the API supplies versioned drafts",
+        "Read items with bounded last_timestamp_ms pagination and render notes as text",
+        "Do not execute production writes while implementing the feature"
+      ]
+    }
+  },
+  {
+    "id": "playlist-notes-clearing",
+    "prompt": "Clear the curator's note from one entry in our Python app without removing or reordering the episode. The playlist entry id is 23 and data.id is the episode UUID.",
+    "context": "Python backend using podcast-api 3.0.0; implementing an editor action",
+    "expected": {
+      "endpoint": "PUT /playlists/{id}/items/{item_id}",
+      "invariants": [
+        "Call update_playlist_item_notes with keyword arguments",
+        "Use item_id=23, not the episode UUID from data.id",
+        "Send notes as an explicit empty string rather than None or an omitted field",
+        "Keep id and item_id in the URL path and notes in the body for a direct HTTP implementation",
+        "Preserve the item ID and added_at_ms; do not delete and re-add the item",
+        "Handle ownership failure separately from missing content"
+      ]
+    }
+  },
+  {
+    "id": "podcast-and-episode-views",
+    "prompt": "Our collection has both recommended shows and individual episodes. Make shows the default on Listen Notes, but let our app show both tabs.",
+    "context": "Existing playlist owned by the admin API account",
+    "expected": {
+      "endpoint": "PUT /playlists/{id}; GET /playlists/{id}?type=podcast_list; GET /playlists/{id}?type=episode_list",
+      "invariants": [
+        "Set the saved default with type=podcast_list in the metadata PUT body",
+        "Preserve all existing podcasts and episodes when changing the default type",
+        "Use separate bounded pagination loops for each GET view with last_timestamp_ms",
+        "Explain that a GET type query selects a view without changing the saved default",
+        "Use each response's listennotes_url rather than assuming one URL covers both views",
+        "Do not claim adding a podcast automatically adds its episodes or invent custom reordering"
+      ]
+    }
+  },
+  {
+    "id": "playlist-read-does-not-grant-write",
+    "prompt": "This public playlist appears in our account's playlist list after we joined it, but adding an episode returns 403. Fix our integration.",
+    "context": "The API admin did not create the playlist",
+    "expected": {
+      "endpoint": "POST /playlists/{id}/items",
+      "invariants": [
+        "Explain that listing includes created and joined playlists",
+        "Distinguish public readability and contributor membership from admin ownership required for writes",
+        "Do not keep retrying the write, suggest an authentication bypass, or tell the user their key is necessarily invalid",
+        "Use an admin-owned collection if the application needs API editing"
+      ]
+    }
+  },
+  {
+    "id": "kotlin-scala-sdk-playlist-upgrade",
+    "prompt": "Our Kotlin and Scala services use com.listennotes:podcast-api:1.1.6. Add support for creating and editing playlists.",
+    "context": "Java 17 services with existing Gradle dependencies",
+    "expected": {
+      "endpoint": "POST /playlists; PUT /playlists/{id}; POST /playlists/{id}/items",
+      "invariants": [
+        "Upgrade the shared Java dependency to a compatible 3.0.0 or newer release before calling the new methods",
+        "Do not invent separate Kotlin or Scala Maven artifacts",
+        "Use createPlaylist, updatePlaylist, and addPlaylistItem with Map<String, String> arguments",
+        "Keep com.listennotes.podcast_api imports and parse responses with toJSON()",
+        "Use direct HTTP if an SDK upgrade cannot fit the application; do not pretend the methods exist in 1.1.6"
+      ]
+    }
+  },
+  {
+    "id": "mock-playlist-writes",
+    "prompt": "Our mock test creates a playlist and adds an episode, but GET does not return our new data. Fix the test without calling production.",
+    "context": "Public Listen Notes mock server, no API credentials",
+    "expected": {
+      "endpoint": "Mock POST /playlists; POST /playlists/{id}/items; GET /playlists/{id}",
+      "invariants": [
+        "Explain that the public mock returns canned data and does not persist playlist writes",
+        "Test transport, parsing, and 200/201 handling independently against the public mock",
+        "Use a stateful local fixture for the application's create-add-edit-read workflow",
+        "Do not inject production credentials or send production requests to make the mock test pass",
+        "Cover omitted versus explicitly empty notes and repeated additions with local fixtures"
+      ]
+    }
+  },
+  {
+    "id": "whole-playlist-deletion-unavailable",
+    "prompt": "Add a delete-collection button that permanently deletes a playlist using the current Podcast API.",
+    "context": "Current OpenAPI has item deletion but no DELETE /playlists/{id}",
+    "expected": {
+      "endpoint": "No whole-playlist deletion endpoint; DELETE /playlists/{id}/items/{item_id} deletes only an entry",
+      "invariants": [
+        "Check the live contract and explain that deleting an entire playlist is not currently supported by the API",
+        "Do not invent DELETE /playlists/{id} or a deletePlaylist SDK method",
+        "Do not replace the requested operation with a loop deleting every item",
+        "Do not use DELETE /podcasts/{id}, which targets directory content",
+        "Offer an application-only hide/archive action only as a distinct alternative, not permanent API deletion"
+      ]
+    }
   }
 ]

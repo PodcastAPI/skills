@@ -1,6 +1,6 @@
 ---
 name: podcast-api
-description: Build, debug, review, and explain integrations with the Listen Notes Podcast API (PodcastAPI.com). Use for podcast or episode search, metadata, recommendations, playlists, transcripts, pagination, authentication, mock-server testing, API usage, caching and attribution rules, pricing, quotas, and billing questions.
+description: Build, debug, review, and explain Listen Notes Podcast API integrations. Use for podcast or episode search, discovery, metadata, playlist creation and editing, headless CMS and editorial curation, SDK integration, transcripts, authentication, pagination, mock testing, and API or billing questions.
 ---
 
 # Podcast API
@@ -20,10 +20,12 @@ Do not copy a remembered schema into an implementation. Verify the relevant Open
 1. Inspect the target repository before changing it.
    - Identify the language, framework, server-side boundary, HTTP client, environment-variable convention, and test setup.
    - Reuse an installed official SDK or the project's existing HTTP client. Otherwise prefer the language's native HTTP facilities instead of adding a dependency.
+   - For SDK versions, playlist method names, and upgrade compatibility, read [official-sdks.md](references/official-sdks.md). Older SDKs may lack playlist writes; do not invent methods on the installed version.
 2. Select the operation.
    - Read [endpoint-selection.md](references/endpoint-selection.md).
    - Load only the use-case reference relevant to the request.
    - Confirm the operation in the live OpenAPI document, including plan restrictions and pagination fields.
+   - For an editorial feed, curated collection, or headless CMS, read [playlist-cms.md](references/playlist-cms.md). Playlists support both API editing and human curation in Listen Later.
 3. Design the security boundary.
    - Read `LISTEN_API_KEY` only in server-side code or a serverless function.
    - Send it as `X-ListenAPI-Key` to the production API.
@@ -33,6 +35,7 @@ Do not copy a remembered schema into an implementation. Verify the relevant Open
    - Keep the production base URL configurable and default it to `https://listen-api.listennotes.com/api/v2`.
    - Encode query parameters and request bodies with structured APIs.
    - Validate inputs at the application's boundary and handle non-2xx responses explicitly.
+   - For playlist writes, enforce the application's editor permissions and collection ownership before forwarding requests. Only playlists owned by your admin API account can be modified.
    - Follow [integration-rules.md](references/integration-rules.md) for pagination, usage headers, caching, attribution, and error handling.
 5. Test without spending quota.
    - Follow [testing.md](references/testing.md).
@@ -51,9 +54,11 @@ Do not make a production request unless the user explicitly asks and has arrange
 - Endpoint choice and current API surface: [endpoint-selection.md](references/endpoint-selection.md)
 - Authentication, errors, pagination, caching, and attribution: [integration-rules.md](references/integration-rules.md)
 - Mock server and test strategy: [testing.md](references/testing.md)
+- Official SDK versions, package names, and playlist methods: [official-sdks.md](references/official-sdks.md)
 - Search, typeahead, genres, charts, and discovery: [search-and-discovery.md](references/search-and-discovery.md)
 - Podcast lookup, episode sync, subscriptions, OPML, and webhooks: [library-and-sync.md](references/library-and-sync.md)
-- Playlists, curation, audio, embeds, and transcripts: [playlists-and-media.md](references/playlists-and-media.md)
+- Playlist creation, editing, publication, and headless CMS: [playlist-cms.md](references/playlist-cms.md)
+- Application-owned playlists, audio, embeds, and transcripts: [playlists-and-media.md](references/playlists-and-media.md)
 - API keys, usage monitoring, and account operations: [account-and-usage.md](references/account-and-usage.md)
 - Product, policy, support, rate-limit, and data questions: [api-faq.md](references/api-faq.md)
 - Plans, quotas, charges, cancellation, and payments: [billing-faq.md](references/billing-faq.md)

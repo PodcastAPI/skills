@@ -10,6 +10,8 @@ The mock server has three important limitations:
 2. It cannot validate search relevance, filters, sorting, plan behavior, pagination semantics, or data freshness.
 3. It may be unavailable occasionally.
 
+Playlist writes return canned success responses without persisting changes. A mock create/add/update/delete sequence does not prove that a later GET reflects the change. Use stateful local fixtures to test a CMS editing workflow; use the public mock to test each method's transport and parsing independently.
+
 Therefore, use it only to verify URL construction, HTTP transport, parsing, and broad response shape. See the official [mock-server tutorial](https://www.listennotes.help/article/48-how-to-test-the-podcast-api-without-an-api-key).
 
 ## Test Layers
@@ -17,8 +19,9 @@ Therefore, use it only to verify URL construction, HTTP transport, parsing, and 
 1. Unit-test application behavior with local mocks or fixtures.
    - Assert the chosen method, path, encoded query, body, and header names.
    - Assert that the API-key value is never returned to or serialized for a client.
-   - Cover `400`, `401`, `404`, `429`, network failures, and malformed JSON as relevant.
+   - Cover `200`/`201`, `400`, `401`, `403`, `404`, `429`, network failures, and malformed JSON as relevant.
    - Cover empty results, missing optional fields, repeated cursors, and maximum-page guards.
+   - For playlists, cover exactly one episode/podcast ID, nested playlist/item paths, omitted versus empty notes, metadata partial updates, repeated additions, and ownership failures. Assert notes edits keep the item ID and ordering timestamp.
 2. Add a mock-server integration test when network tests fit the repository.
    - Inject the mock base URL through configuration.
    - Omit the API key.
