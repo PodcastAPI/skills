@@ -22,6 +22,7 @@ Therefore, use it only to verify URL construction, HTTP transport, parsing, and 
    - Cover `200`/`201`, `400`, `401`, `403`, `404`, `429`, network failures, and malformed JSON as relevant.
    - Cover empty results, missing optional fields, repeated cursors, and maximum-page guards.
    - For playlists, cover exactly one episode/podcast ID, nested playlist/item paths, omitted versus empty notes, metadata partial updates, repeated additions, and ownership failures. Assert notes edits keep the item ID and ordering timestamp.
+   - For whole-playlist deletion, test that canceling the application's confirmation sends no request, while confirming sends one authorized DELETE with the playlist ID in the path and no body. Cover `200` with `deleted: true`, `403` ownership failure, and `404` for a missing/already-deleted playlist. Use a local fixture to verify the app removes cached collection views; the stateless public mock cannot prove permanent deletion.
 2. Add a mock-server integration test when network tests fit the repository.
    - Inject the mock base URL through configuration.
    - Omit the API key.

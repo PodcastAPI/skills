@@ -105,7 +105,7 @@
   {
     "id": "episode-curation-cms",
     "prompt": "Use Listen Notes as a headless CMS for our weekly handpicked episodes page. Our editors need to create a collection, add episodes with blurbs, and publish it.",
-    "context": "Node 22 backend using podcast-api 3.0.2; browser editor UI; implementation only",
+    "context": "Node 22 backend using podcast-api 3.1.0; browser editor UI; implementation only",
     "expected": {
       "endpoint": "POST /playlists; POST /playlists/{id}/items; PUT /playlists/{id}; GET /playlists/{id}",
       "invariants": [
@@ -123,7 +123,7 @@
   {
     "id": "playlist-notes-clearing",
     "prompt": "Clear the curator's note from one entry in our Python app without removing or reordering the episode. The playlist entry id is 23 and data.id is the episode UUID.",
-    "context": "Python backend using podcast-api 3.0.0; implementing an editor action",
+    "context": "Python backend using podcast-api 3.1.0; implementing an editor action",
     "expected": {
       "endpoint": "PUT /playlists/{id}/items/{item_id}",
       "invariants": [
@@ -173,7 +173,7 @@
     "expected": {
       "endpoint": "POST /playlists; PUT /playlists/{id}; POST /playlists/{id}/items",
       "invariants": [
-        "Upgrade the shared Java dependency to a compatible 3.0.0 or newer release before calling the new methods",
+        "Upgrade the shared Java dependency to the documented 3.1.0 release or a compatible newer release before calling the new methods",
         "Do not invent separate Kotlin or Scala Maven artifacts",
         "Use createPlaylist, updatePlaylist, and addPlaylistItem with Map<String, String> arguments",
         "Keep com.listennotes.podcast_api imports and parse responses with toJSON()",
@@ -197,17 +197,37 @@
     }
   },
   {
-    "id": "whole-playlist-deletion-unavailable",
+    "id": "whole-playlist-deletion",
     "prompt": "Add a delete-collection button that permanently deletes a playlist using the current Podcast API.",
-    "context": "Current OpenAPI has item deletion but no DELETE /playlists/{id}",
+    "context": "Node 22 backend using podcast-api 3.1.0; browser editor UI; implementation only",
     "expected": {
-      "endpoint": "No whole-playlist deletion endpoint; DELETE /playlists/{id}/items/{item_id} deletes only an entry",
+      "endpoint": "DELETE /playlists/{id}",
       "invariants": [
-        "Check the live contract and explain that deleting an entire playlist is not currently supported by the API",
-        "Do not invent DELETE /playlists/{id} or a deletePlaylist SDK method",
+        "Add confirmation in the application's UI explaining that the playlist and all saved episode/podcast references and notes are permanently deleted, regardless of collection size",
+        "Canceling confirmation sends no request; confirming invokes an authenticated and authorized backend action",
+        "Use client.deletePlaylist({ id: playlistId }) and response.data with the Node SDK; direct HTTP uses the 11-character playlist ID in the URL path and no request body or confirm parameter",
+        "Only playlists owned by the admin API account can be modified; public readability or contributor membership does not grant deletion rights",
+        "Handle 200 with id and deleted=true, 403 ownership failure, and 404 for a missing or already-deleted playlist; repeated whole-playlist deletion differs from repeated item deletion",
+        "Explain that the actual episodes and podcasts remain in the Listen Notes podcast database; only this playlist's saved references and notes are removed",
+        "Do not promise recovery, an undo operation, or an API-provided confirmation prompt",
         "Do not replace the requested operation with a loop deleting every item",
         "Do not use DELETE /podcasts/{id}, which targets directory content",
-        "Offer an application-only hide/archive action only as a distinct alternative, not permanent API deletion"
+        "Do not execute production deletion while implementing the feature"
+      ]
+    }
+  },
+  {
+    "id": "whole-playlist-deletion-sdk-upgrade",
+    "prompt": "Our Python service already uses playlist writes. Add permanent collection deletion with the installed SDK.",
+    "context": "Python 3.10 backend using podcast-api 3.0.0; dependency upgrade requires a separate application decision",
+    "expected": {
+      "endpoint": "DELETE /playlists/{id}",
+      "invariants": [
+        "Recognize that 3.0.x playlist writes do not include whole-playlist deletion",
+        "Use delete_playlist(id=playlist_id) only after upgrading to 3.1.0 or newer; otherwise use the application's existing HTTP client with DELETE and an encoded playlist ID",
+        "Do not invent delete_playlist on the installed 3.0.0 package or require a new HTTP dependency when one is available",
+        "Preserve backend-only credentials, admin ownership checks, application UI confirmation, and the irreversible-deletion warning",
+        "Do not execute a production mutation to verify the implementation"
       ]
     }
   }

@@ -43,8 +43,9 @@ Use this map to find a likely operation, then verify its exact contract in the l
 | Add an episode or podcast | `POST /playlists/{id}/items` | Add exactly one content ID with optional curator notes; reuse an existing item. |
 | Edit or clear curator notes | `PUT /playlists/{id}/items/{item_id}` | Replace notes; an explicit empty string clears them. |
 | Remove an entry | `DELETE /playlists/{id}/items/{item_id}` | Delete an item from this playlist using its integer playlist-item ID. |
+| Delete a collection permanently | `DELETE /playlists/{id}` | Delete an admin-owned playlist and all references and notes saved in it. Add UI confirmation first; deletion cannot be undone, regardless of collection size. |
 
-Use [playlist-cms.md](playlist-cms.md) for the editorial workflow, ownership, view types, and pagination. The current API has no whole-playlist deletion, custom ordering, or bulk-add endpoint. Do not confuse removing a playlist entry with `DELETE /podcasts/{id}`, which requests removal of a podcast from the directory.
+Use [playlist-cms.md](playlist-cms.md) for the editorial workflow, ownership, view types, pagination, and deletion behavior. Custom ordering and bulk addition are not supported. Deleting a playlist or an entry removes its saved references, not the actual episodes or podcasts from the Listen Notes podcast database. `DELETE /podcasts/{id}` is a different operation that requests removal of a podcast from the directory.
 
 ## Podcaster And Insights
 

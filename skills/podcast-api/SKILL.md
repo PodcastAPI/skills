@@ -1,6 +1,6 @@
 ---
 name: podcast-api
-description: Build, debug, review, and explain Listen Notes Podcast API integrations. Use for podcast or episode search, discovery, metadata, playlist creation and editing, headless CMS and editorial curation, SDK integration, transcripts, authentication, pagination, mock testing, and API or billing questions.
+description: Build, debug, review, and explain Listen Notes Podcast API integrations. Use for podcast or episode search, discovery, metadata, playlist creation, editing and deletion, headless CMS and editorial curation, SDK integration, transcripts, authentication, pagination, mock testing, and API or billing questions.
 ---
 
 # Podcast API
@@ -36,6 +36,7 @@ Do not copy a remembered schema into an implementation. Verify the relevant Open
    - Encode query parameters and request bodies with structured APIs.
    - Validate inputs at the application's boundary and handle non-2xx responses explicitly.
    - For playlist writes, enforce the application's editor permissions and collection ownership before forwarding requests. Only playlists owned by your admin API account can be modified.
+   - For whole-playlist deletion, add confirmation in the application's UI before sending `DELETE /playlists/{id}`. It permanently removes the collection and its saved references and notes; there is no recovery. See [playlist-cms.md](references/playlist-cms.md) for deletion behavior.
    - Follow [integration-rules.md](references/integration-rules.md) for pagination, usage headers, caching, attribution, and error handling.
 5. Test without spending quota.
    - Follow [testing.md](references/testing.md).
@@ -57,7 +58,7 @@ Do not make a production request unless the user explicitly asks and has arrange
 - Official SDK versions, package names, and playlist methods: [official-sdks.md](references/official-sdks.md)
 - Search, typeahead, genres, charts, and discovery: [search-and-discovery.md](references/search-and-discovery.md)
 - Podcast lookup, episode sync, subscriptions, OPML, and webhooks: [library-and-sync.md](references/library-and-sync.md)
-- Playlist creation, editing, publication, and headless CMS: [playlist-cms.md](references/playlist-cms.md)
+- Playlist creation, editing, publication, permanent deletion, and headless CMS: [playlist-cms.md](references/playlist-cms.md)
 - Application-owned playlists, audio, embeds, and transcripts: [playlists-and-media.md](references/playlists-and-media.md)
 - API keys, usage monitoring, and account operations: [account-and-usage.md](references/account-and-usage.md)
 - Product, policy, support, rate-limit, and data questions: [api-faq.md](references/api-faq.md)

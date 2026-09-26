@@ -25,7 +25,7 @@ Use the live [OpenAPI document](https://listen-api.listennotes.com/api/v2/openap
 
 Do not assume every endpoint returns every status. Preserve enough upstream context for diagnosis without exposing secrets.
 
-Playlist POST/PUT requests accept JSON or form-encoded bodies. Put playlist and item identifiers in the path, read filters/cursors in the query string, and editable fields in the body. Preserve explicit empty strings for notes and descriptions; they clear values. Omitted fields preserve existing values. Item DELETE takes no body. Do not blindly retry playlist creation after an ambiguous timeout: it can create a second playlist. See [playlist-cms.md](playlist-cms.md) for write behavior.
+Playlist POST/PUT requests accept JSON or form-encoded bodies. Put playlist and item identifiers in the path, read filters/cursors in the query string, and editable fields in the body. Preserve explicit empty strings for notes and descriptions; they clear values. Omitted fields preserve existing values. Playlist and item DELETE requests take no body. Whole-playlist deletion is irreversible and needs confirmation in your application's UI before the request; it returns `404` if the playlist is missing or already deleted. Repeating item deletion within an existing playlist succeeds. Do not blindly retry playlist creation after an ambiguous timeout: it can create a second playlist. See [playlist-cms.md](playlist-cms.md) for write behavior.
 
 ## Pagination
 

@@ -17,6 +17,7 @@ Use a Listen Later playlist as an editorial collection for a podcast app, topic 
 4. Edit the collection with `PUT /playlists/{id}`. Send only the fields to change: `name`, `description`, `visibility`, or `type`. Use `PUT /playlists/{id}/items/{item_id}` for item notes and `DELETE /playlists/{id}/items/{item_id}` to remove an entry.
 5. Publish intentionally: set `visibility` to `public` for discoverability on ListenNotes.com, or `unlisted` for access by anyone who knows its ID. You can also keep the collection private and serve authorized app readers through your backend. An unlisted URL is not access control. Visibility does not replace the app's own draft/publish permissions.
 6. Render `GET /playlists/{id}` in your app. Display collection metadata and each entry's `data` plus curator `notes`. Use the returned `listennotes_url` for the corresponding Listen Notes view. Render notes as text, not trusted HTML. Reuse the write response to update the editor immediately.
+7. When an editor chooses to delete the entire collection, show a confirmation in your application's UI before sending `DELETE /playlists/{id}` from the authorized backend. **Deletion cannot be undone, regardless of how many episodes or podcasts the playlist contains.** It removes the playlist and all episode/podcast references and notes saved in this specific playlist; the actual episodes and podcasts remain in the Listen Notes podcast database. The API does not provide a confirmation prompt or recovery operation.
 
 Private is a visibility setting, not a versioned draft system. Editing a published playlist changes that collection; the API does not supply staged revisions, a review queue, or atomic publication of a batch of changes. Add those application behaviors only when requested.
 
@@ -39,14 +40,15 @@ Continue with response `last_timestamp_ms` in the next request, keeping `type` a
 - Re-adding the same content reuses the item. Omitted `notes` preserve its notes, including on re-addition; supplied `notes` replace them. Send `notes: ""` to clear notes, never `null` or an omitted field. Notes edits preserve the item ID and `added_at_ms` ordering timestamp.
 - Metadata PUT preserves omitted fields, requires at least one supported field, and accepts `description: ""` to clear it. Names must be nonblank and cannot be `rss` (case insensitive). Name/description limits are 4,096 characters; plain-text notes are limited to 1,024 characters.
 - Item DELETE takes no body and returns `200` with `{ "id": 23, "deleted": true }`. Repeating it for that same deleted entry succeeds. Removing an entry does not remove the underlying podcast/episode from the directory.
+- Whole-playlist DELETE takes only the 11-character playlist `id` in the URL path, with no query parameters or body. It returns `200` with `{ "id": "m1pe7z60bsw", "deleted": true }`. A missing or already-deleted playlist returns `404`; unlike item deletion, a repeated deletion does not return another success response. Do not invent a `confirm` parameter or substitute a loop deleting all items.
 - Handle `400` validation errors, `401` authentication/access errors, `403` ownership errors, `404` missing playlist/item/content, and quota/rate-limit errors. A missing episode or podcast returns `404` with the content-specific reason; invalid content ID syntax returns `400`.
-- Writes accept JSON and form encoding. Keep path identifiers out of the editable body and do not drop explicitly empty strings in a serializer. Do not blindly retry collection creation after a timeout or repeat it on every app render; keep the returned playlist ID in the app's collection configuration.
+- POST/PUT writes accept JSON and form encoding; both DELETE operations take no body. Keep path identifiers out of the editable body and do not drop explicitly empty strings in a serializer. Do not blindly retry collection creation after a timeout or repeat it on every app render; keep the returned playlist ID in the app's collection configuration. After deletion, remove the app's saved collection reference and invalidate cached views of it.
 
-The current API does not delete an entire playlist. Do not invent `DELETE /playlists/{id}` or implement it by deleting every item. Bulk addition, arbitrary reordering, artwork editing, and custom-audio upload are also not current write operations. Add multiple selections with bounded individual requests when the user requests them.
+Bulk addition, arbitrary reordering, artwork editing, and custom-audio upload are not current write operations. Add multiple selections with bounded individual requests when the user requests them.
 
 ## Node SDK Example
 
-Backend-only helpers for `podcast-api@3.0.2` (Node 22+). These define explicit editing actions; they do not run a mutation on import. Call them only from an authorized editor action. Get `episodeId` from a search/details response; `playlistId` and `itemId` come from the create/add responses.
+Backend-only helpers for `podcast-api@3.1.0` (Node 22+). These define explicit editing actions; they do not run a mutation on import. Call them only from an authorized editor action; invoke `deleteCollection` after the application's UI confirmation. Get `episodeId` from a search/details response; `playlistId` and `itemId` come from the create/add responses.
 
 ```js
 const { Client } = require('podcast-api');
@@ -79,6 +81,11 @@ function collectionEditor() {
     },
     async removeItem(playlistId, itemId) {
       const response = await client.deletePlaylistItem({ id: playlistId, item_id: itemId });
+      return response.data;
+    },
+    async deleteCollection(playlistId) {
+      // Permanently delete the collection after UI confirmation and authorization.
+      const response = await client.deletePlaylist({ id: playlistId });
       return response.data;
     },
     async readPage(playlistId, lastTimestampMs = 0) {

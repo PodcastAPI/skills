@@ -2,7 +2,7 @@
 
 Agent Skills for building secure applications with the [Listen Notes Podcast API](https://www.podcastapi.com/).
 
-The `podcast-api` skill helps coding agents select endpoints and current SDK methods, keep credentials server-side, implement pagination and error handling, test against the mock server, and answer API or billing questions from authoritative sources. It includes using playlists as a headless CMS: create podcast or episode collections, add curator notes, edit or remove entries, and publish curated feeds to your app.
+The `podcast-api` skill helps coding agents select endpoints and current SDK methods, keep credentials server-side, implement pagination and error handling, test against the mock server, and answer API or billing questions from authoritative sources. It includes using playlists as a headless CMS: create podcast or episode collections, add curator notes, edit or remove entries, publish curated feeds to your app, and permanently delete collections after confirmation in your app's UI.
 
 Questions? Contact us at [hello@listennotes.com](mailto:hello@listennotes.com).
 
