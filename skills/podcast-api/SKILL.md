@@ -1,6 +1,9 @@
 ---
 name: podcast-api
-description: Build, debug, review, and explain Listen Notes Podcast API integrations. Use for podcast or episode search, discovery, metadata, playlist creation, editing and deletion, headless CMS and editorial curation, SDK integration, transcripts, authentication, pagination, mock testing, and API or billing questions.
+description: Build, debug, review, and explain applications that integrate the Listen Notes Podcast API through REST endpoints or SDKs. Use for endpoint and SDK selection, server-side API keys, integration code, pagination, testing, playlist editing, and API or billing documentation questions. For finding podcasts or episodes with connected MCP tools, use podcast-mcp instead.
+metadata:
+  author: "Listen Notes, Inc."
+  contact: "hello@listennotes.com"
 ---
 
 # Podcast API

@@ -1,14 +1,17 @@
 {
   "$schema": "https://code.claude.com/schemas/marketplace.json",
   "name": "podcastapi",
+  "description": "Podcast research and Podcast API development skills from Listen Notes, Inc.",
   "owner": {
     "name": "Listen Notes, Inc.",
+    "email": "hello@listennotes.com",
     "url": "https://www.podcastapi.com"
   },
   "plugins": [
     {
       "name": "podcast-api",
       "source": "./",
+      "skills": ["./skills/podcast-api"],
       "description": "Build secure Listen Notes Podcast API integrations with endpoint, workflow, testing, and policy guidance"
     }
   ]
