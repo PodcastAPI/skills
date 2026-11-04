@@ -1,6 +1,7 @@
 """Validate skill metadata, references, packaging boundaries, and review cases."""
 import json
 import re
+import struct
 from pathlib import Path
 
 import yaml
@@ -104,8 +105,56 @@ def validate_cases():
             assert {case["expected"]["activate"] for case in cases} == {False, True}
 
 
+def validate_openai_plugin():
+    source = ROOT / 'plugins/podcast-search-openai'
+    plugin = load_json('plugins/podcast-search-openai/plugin.json')
+    assert plugin['$schema'] == 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json'
+    assert plugin['name'] == 'podcast-search'
+    assert re.fullmatch(r'\d+\.\d+\.\d+', plugin['version'])
+    assert plugin['author']['name'] == PUBLISHER and plugin['author']['email'] == CONTACT
+    assert not plugin.get('apps') and not plugin.get('hooks')
+    openai = plugin['extensions']['com.openai']
+    interface = openai['interface']
+    assert interface['displayName'] == 'Podcast Search by Listen Notes'
+    for field in ('displayName', 'shortDescription'):
+        assert 1 <= len(interface[field]) <= 30
+    assert interface['developerName'] == PUBLISHER
+    assert interface['category'] == 'Entertainment'
+    for field in ('websiteURL', 'privacyPolicyURL', 'termsOfServiceURL', 'supportURL'):
+        assert interface[field].startswith('https://www.listennotes.com/')
+    for field in ('logo', 'logoDark', 'composerIcon', 'composerIconDark'):
+        path = source / interface[field]
+        assert path.resolve().is_relative_to(source.resolve()) and path.is_file()
+        data = path.read_bytes()
+        assert data[:8] == b'\x89PNG\r\n\x1a\n' and len(data) <= 5 * 1024 * 1024
+        width, height = struct.unpack('>II', data[16:24])
+        assert width == height and 256 <= width <= 4096
+    review = openai['review']
+    assert review['commerce'] is False
+    assert len(review['test_cases']['positive']) >= 5
+    assert len(review['test_cases']['negative']) >= 3
+    for kind, cases in review['test_cases'].items():
+        for case in cases:
+            assert case['prompt'].strip() and case['description'].strip()
+            if kind == 'positive':
+                assert case['tools_triggered'].strip() and case['expected_behavior'].strip()
+    assert openai['publication']['countries'] == []  # All directory-supported countries.
+    mcp = load_json('plugins/podcast-search-openai/mcp.json')
+    assert mcp['$schema'] == 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json'
+    assert set(mcp['mcpServers']) == {'listen_notes'}
+    server = mcp['mcpServers']['listen_notes']
+    assert server['type'] == 'streamable-http'
+    assert server['url'] == 'https://mcp.listennotes.com/mcp/'
+    assert not ({'headers', 'env', 'command'} & server.keys())
+    # Use server-advertised OAuth metadata and scopes to keep the runtime
+    # transport declaration compatible across supported clients.
+    assert set(server) == {'type', 'url'}, 'Use only type and url; obtain OAuth metadata through server discovery.'
+    assert not list(source.rglob('.app.json'))
+
+
 if __name__ == "__main__":
     validate_skills()
     validate_packaging()
     validate_cases()
-    print("Validated both skills, MCP dependency, developer-plugin isolation, and review case structure.")
+    validate_openai_plugin()
+    print("Validated both skills, MCP dependency, developer-plugin isolation, OpenAI package, and review cases.")

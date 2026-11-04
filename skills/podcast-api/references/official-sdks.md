@@ -1,10 +1,10 @@
 # Official SDKs
 
-Use this version snapshot for playlist support, then check the target project's lockfile and the linked SDK documentation. Do not assume a newly generated method exists in an older installed package. Upgrade within the user's scope and check the SDK's runtime requirements; an existing HTTP client is a valid alternative when an upgrade would not fit.
+Use these compatibility baselines for playlist support, then check the target project's lockfile and the linked SDK documentation. Do not assume a documented method exists in an older installed package. Upgrade within the user's scope and check the SDK's runtime requirements; an existing HTTP client is a valid alternative when an upgrade would not fit.
 
 ## Versions And Packages
 
-Synchronized versions as of 2026-09-25; these are a compatibility snapshot, not a promise that they remain the latest release. All listed versions support the six playlist write operations, including permanent whole-playlist deletion. Version 3.0.x supports the first five writes but does not include the whole-playlist deletion method; use 3.1.0 or newer for that operation.
+The versions below are compatibility baselines rather than a list of the latest releases. All listed versions support the six playlist write operations, including permanent whole-playlist deletion. Version 3.0.x supports the first five writes but does not include the whole-playlist deletion method; use 3.1.0 or newer for that operation.
 
 | Language | Package / dependency | Version | SDK documentation |
 | --- | --- | --- | --- |

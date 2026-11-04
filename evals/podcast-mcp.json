@@ -81,7 +81,7 @@
       "invariants": [
         "Reuse the known seed ID instead of searching for it again",
         "Link the recommended podcasts using returned URLs",
-        "Do not claim that card UI or follow-up buttons are provided by the skill"
+        "When render tools and presentation references are available, display selected cached results as cards; otherwise use source links. Do not invent follow-up buttons."
       ]
     }
   },
@@ -142,15 +142,15 @@
     }
   },
   {
-    "id": "selected-local-mock-connection",
-    "prompt": "Use listennotes-local to search for startup episodes.",
-    "context": "A working local Listen Notes connection is exposed and identifies its environment as mock.",
+    "id": "selected-local-connection",
+    "prompt": "Use my local development MCP connection to search for startup episodes.",
+    "context": "A working local Listen Notes MCP connection is exposed and uses the Production API.",
     "expected": {
       "activate": true,
       "tools": ["search"],
       "invariants": [
         "Use the requested local connection rather than adding or switching to the public Production server",
-        "Label returned episodes as sample data and avoid claiming the samples validate keyword matching",
+        "Treat API requests through the local MCP connection as production usage under the selected app's billing",
         "Do not invent an environment argument or arbitrary API base URL"
       ]
     }

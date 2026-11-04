@@ -1,0 +1,101 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "podcast-search",
+  "version": "1.0.2",
+  "description": "Search podcasts and episodes, discover guest interviews and available producer contacts, and listen to episodes with Listen Notes.",
+  "author": {
+    "name": "Listen Notes, Inc.",
+    "email": "hello@listennotes.com",
+    "url": "https://www.listennotes.com/"
+  },
+  "homepage": "https://www.listennotes.com/api/",
+  "repository": "https://github.com/PodcastAPI/skills",
+  "license": "MIT",
+  "keywords": ["podcast", "podcasts", "episodes", "interviews", "podcast search", "podcast discovery", "podcast contacts", "transcripts"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Podcast Search by Listen Notes",
+        "shortDescription": "Podcasts, interviews & audio",
+        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, and retrieve available transcripts. View podcast and episode cards with links to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Podcast cards can show an email contact dialog. Episode cards offer click-to-play audio when the host and publisher support playback, with a Listen Notes page link as a fallback. Connect your Listen Notes account and select an existing Podcast API app or create one during authorization. API access and availability follow that account's permissions.",
+        "developerName": "Listen Notes, Inc.",
+        "category": "Entertainment",
+        "capabilities": ["Search", "Read", "Interactive"],
+        "websiteURL": "https://www.listennotes.com/api/",
+        "supportURL": "https://www.listennotes.com/contact/",
+        "privacyPolicyURL": "https://www.listennotes.com/privacy/",
+        "termsOfServiceURL": "https://www.listennotes.com/api/terms/",
+        "defaultPrompt": [
+          "Find podcast interviews about bootstrapping a startup.",
+          "Find technology podcasts with fewer than 30 episodes and available producer contacts.",
+          "Pick a random podcast episode I can listen to."
+        ],
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/logo.png",
+        "logoDark": "./assets/logo-dark.png",
+        "composerIconDark": "./assets/logo-dark.png"
+      },
+      "review": {
+        "prompts": [
+          "Find podcast interviews about bootstrapping a startup.",
+          "Find technology podcasts with fewer than 30 episodes and available producer contacts.",
+          "Pick a random podcast episode I can listen to."
+        ],
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Search for relevant podcast episodes by topic and display the selected results as cards.",
+              "prompt": "Find three podcast episodes about bootstrapping a startup and show them as cards.",
+              "tools_triggered": "search, renderEpisodeCards",
+              "expected_behavior": "Search type=episode with an appropriate topic query. Display up to three relevant returned episode IDs using their presentation references. Cards contain actual titles, podcast names and Listen Notes links. Rendering makes no additional API request."
+            },
+            {
+              "description": "Guest interview research distinguishes guest participation from a passing mention.",
+              "prompt": "Find podcast interviews with Patrick Collison and show the matches.",
+              "tools_triggered": "search, renderEpisodeCards",
+              "expected_behavior": "Search type=episode with the person's name. Use returned evidence to label interviews or uncertain mentions accurately, then display selected results with their exact source links. Do not invent guest participation."
+            },
+            {
+              "description": "Filter podcasts by episode count and display available producer contacts, respecting account permissions and missing data.",
+              "prompt": "Find technology podcasts with fewer than 30 episodes and available email contacts.",
+              "tools_triggered": "search, renderPodcastCards",
+              "expected_behavior": "Use type=podcast, a technology query, and episode_count_max=29. Reuse returned contacts. Display qualifying podcast cards; selecting Email opens a selectable dialog with the actual returned address. Hide missing contacts and do not send outreach."
+            },
+            {
+              "description": "Podcast source navigation. Open only actual returned destinations; no website/API credential is exposed.",
+              "prompt": "Find the podcast Planet Money and show its website, RSS feed and Apple Podcasts links when available.",
+              "tools_triggered": "search, renderPodcastCards",
+              "expected_behavior": "Resolve the matching show from returned title/publisher evidence. Show available Web, RSS, and Apple Podcasts buttons alongside the Listen Notes title link. Use the host's external-link bridge; unavailable fields are omitted."
+            },
+            {
+              "description": "Select a random episode and offer user-initiated audio playback with a Listen Notes listening link.",
+              "prompt": "Pick a random episode I can listen to and show its player.",
+              "tools_triggered": "justListen, renderEpisodeCards",
+              "expected_behavior": "Fetch one random episode, then display it using the same returned ID and presentation reference. Audio does not autoplay or preload. User-initiated playback, pause and seeking work for supported media. A failed or blocked source shows a Listen Notes listening fallback."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unsupported playlist writes: explain the read-only MCP boundary and make no write attempt.",
+              "prompt": "Add these podcast episodes to my Listen Later playlist."
+            },
+            {
+              "description": "Unsupported outreach: do not send an email or claim one was sent.",
+              "prompt": "Email all these podcast producers and pitch me as a guest."
+            },
+            {
+              "description": "Unsupported transcription service: do not process the external audio or promise a generated transcript.",
+              "prompt": "Transcribe an audio file from my computer and add the full transcript to Listen Notes."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "Read-only access through an existing Podcast API account. API usage uses the selected API app's existing billing; the plugin exposes no purchase or checkout tools."
+      },
+      "publication": {
+        "countries": [],
+        "release_notes": "Fix desktop MCP startup using standard OAuth discovery. Includes podcast and episode cards, source links, available contact dialogs, and user-initiated audio playback."
+      }
+    }
+  }
+}

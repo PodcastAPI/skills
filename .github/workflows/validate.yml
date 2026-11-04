@@ -34,6 +34,9 @@ jobs:
       - name: Validate repository contracts
         run: uv run --with PyYAML==6.0.3 python scripts/validate.py
 
+      - name: Build OpenAI plugin
+        run: python scripts/build_plugin.py
+
       - name: Discover skills with skills CLI
         run: npx --yes skills@1.5.11 add "$GITHUB_WORKSPACE" --list
 
@@ -79,5 +82,7 @@ jobs:
             --exclude '^https://(www\.)?listennotes\.com/'
             --exclude '^https://(www\.)?podcastapi\.com/'
             './README.md'
+            './AGENTS.md'
+            './plugins/**/*.md'
             './skills/**/*.md'
           fail: true

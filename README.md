@@ -11,7 +11,7 @@ Published by **Listen Notes, Inc.** Questions? Contact [hello@listennotes.com](m
 | [`podcast-mcp`](skills/podcast-mcp/SKILL.md) — Podcast Search by Listen Notes | Research using connected MCP tools: podcasts, episodes, interviews, recommendations, available producer contacts, playlists, and transcripts | "Find startup podcasts with fewer than 30 episodes and available email contacts." |
 | [`podcast-api`](skills/podcast-api/SKILL.md) | Build, debug, and explain applications using REST endpoints or official SDKs | "Build a podcast search feature in Python." |
 
-The research skill requires a connected Listen Notes MCP server. It guides tool use; it does not provide a new card UI or audio player. See [connection instructions](skills/podcast-mcp/references/connection.md).
+The research skill requires a connected Listen Notes MCP server. Supported MCP Apps clients can display podcast and episode cards, available source/contact links, and click-to-play audio when the server exposes the card tools. Other clients retain text and source links. See [connection instructions](skills/podcast-mcp/references/connection.md).
 
 The developer skill covers endpoint and SDK selection, secure credentials, pagination, mock testing, and API or billing documentation. It also covers using playlists as a headless CMS: create collections, add curator notes, edit entries, and permanently delete collections after confirmation in the application's UI. The MCP server supports playlist reads, not writes.
 
@@ -54,14 +54,25 @@ See the official [Codex Agent Skills documentation](https://developers.openai.co
 
 ### Claude Code Plugin
 
-The existing developer plugin remains a separate, developer-only install:
+The developer plugin provides the API integration skill:
 
 ```text
 /plugin marketplace add podcastapi/skills
 /plugin install podcast-api@podcastapi
 ```
 
-The marketplace entry explicitly selects `skills/podcast-api`, so adding the standalone research skill does not add it to this plugin. A separate research plugin and public marketplace submissions are planned for later milestones. To use `podcast-mcp` now, install it as a standalone skill and connect the remote MCP server through the client's supported flow.
+The marketplace entry includes only `skills/podcast-api`. To use `podcast-mcp` in Claude Code, install it as a standalone skill and connect the remote MCP server through the client's supported flow.
+
+### ChatGPT plugin package
+
+The separate **Podcast Search by Listen Notes** package combines only the research skill with the hosted OAuth MCP connection. Build its ZIP with:
+
+```bash
+uv run --with PyYAML==6.0.3 python scripts/validate.py
+python scripts/build_plugin.py
+```
+
+The build writes a versioned archive to `dist/`, including the research skill, hosted MCP connection, and light and dark theme logos. See the [plugin documentation](plugins/podcast-search-openai/README.md) for features, account setup, and package contents.
 
 ### Manual Installation
 
@@ -77,7 +88,7 @@ Compatible agents can install the same folder in their documented Agent Skills d
 
 ## Sources
 
-For research, current MCP tool schemas and `getWorkflowGuide` are the sources of truth for supported arguments and task recipes. The guide is free and makes no Podcast API request. Returned metadata and exact Listen Notes links provide evidence for the answer. Mock mode returns fixed sample data without API quota usage; Production uses the selected API app's existing billing.
+For research, current MCP tool schemas and `getWorkflowGuide` are the sources of truth for supported arguments and task recipes. The guide is free and makes no Podcast API request. Returned metadata and exact Listen Notes links provide evidence for the answer. The MCP server uses the Production API and the selected API app's existing billing.
 
 For development, the skill keeps procedural guidance local while treating these live resources as authoritative:
 
@@ -92,4 +103,4 @@ Exact request and response schemas are intentionally not copied into this reposi
 
 CI validates both skills against the [Agent Skills specification](https://agentskills.io/specification), checks metadata and documentation links, and smoke-tests each skill's installation for Codex, Claude Code, and Cursor. Repository contract checks also verify the developer plugin's skill selection and the research skill's MCP dependency.
 
-Representative development cases live in `evals/cases.json`; research activation and workflow cases live in `evals/podcast-mcp.json`. These are review scenarios with expected behavior, not automatically measured model results. They require no production API key or model secret. Validate actual client activation separately; a valid package does not guarantee tool selection.
+Example evaluation scenarios live in `evals/cases.json` for API integrations and `evals/podcast-mcp.json` for research workflows. They describe expected skill activation, tool selection, pagination, and error handling. Repository checks validate their structure without requiring production credentials.
