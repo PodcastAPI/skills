@@ -11,7 +11,7 @@ Published by **Listen Notes, Inc.** Questions? Contact [hello@listennotes.com](m
 | [`podcast-mcp`](skills/podcast-mcp/SKILL.md) — Podcast Search by Listen Notes | Research using connected MCP tools: podcasts, episodes, interviews, recommendations, available producer contacts, playlists, and transcripts | "Find startup podcasts with fewer than 30 episodes and available email contacts." |
 | [`podcast-api`](skills/podcast-api/SKILL.md) | Build, debug, and explain applications using REST endpoints or official SDKs | "Build a podcast search feature in Python." |
 
-The research skill requires a connected Listen Notes MCP server. Supported MCP Apps clients can display podcast and episode cards, available source/contact links, and click-to-play audio when the server exposes the card tools. Other clients retain text and source links. See [connection instructions](skills/podcast-mcp/references/connection.md).
+The research skill requires a connected Listen Notes MCP server. Supported MCP Apps clients can display podcast and episode cards with available source/contact links, Listen Notes listening links, and manual audio download links when the server exposes the card tools. Other clients retain text and source links. See [connection instructions](skills/podcast-mcp/references/connection.md).
 
 The developer skill covers endpoint and SDK selection, secure credentials, pagination, mock testing, and API or billing documentation. It also covers using playlists as a headless CMS: create collections, add curator notes, edit entries, and permanently delete collections after confirmation in the application's UI. The MCP server supports playlist reads, not writes.
 

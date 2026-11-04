@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "podcast-search",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Search podcasts and episodes, discover guest interviews and available producer contacts, and listen to episodes with Listen Notes.",
   "author": {
     "name": "Listen Notes, Inc.",
@@ -17,7 +17,7 @@
       "interface": {
         "displayName": "Podcast Search by Listen Notes",
         "shortDescription": "Podcasts, interviews & audio",
-        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, and retrieve available transcripts. View podcast and episode cards with links to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Podcast cards can show an email contact dialog. Episode cards offer click-to-play audio when the host and publisher support playback, with a Listen Notes page link as a fallback. Connect your Listen Notes account and select an existing Podcast API app or create one during authorization. API access and availability follow that account's permissions.",
+        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, and retrieve available transcripts. View podcast and episode cards with links to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Podcast cards can show an email contact dialog. Episode cards provide Listen on Listen Notes links and manual audio download links when an audio URL is available. Connect your Listen Notes account and select an existing Podcast API app or create one during authorization. API access and availability follow that account's permissions.",
         "developerName": "Listen Notes, Inc.",
         "category": "Entertainment",
         "capabilities": ["Search", "Read", "Interactive"],
@@ -68,10 +68,10 @@
               "expected_behavior": "Resolve the matching show from returned title/publisher evidence. Show available Web, RSS, and Apple Podcasts buttons alongside the Listen Notes title link. Use the host's external-link bridge; unavailable fields are omitted."
             },
             {
-              "description": "Select a random episode and offer user-initiated audio playback with a Listen Notes listening link.",
-              "prompt": "Pick a random episode I can listen to and show its player.",
+              "description": "Select a random episode and provide listening and manual audio download links.",
+              "prompt": "Pick a random episode and show where I can listen to it or download its audio.",
               "tools_triggered": "justListen, renderEpisodeCards",
-              "expected_behavior": "Fetch one random episode, then display it using the same returned ID and presentation reference. Audio does not autoplay or preload. User-initiated playback, pause and seeking work for supported media. A failed or blocked source shows a Listen Notes listening fallback."
+              "expected_behavior": "Fetch one random episode, then display it using the same returned ID and presentation reference. Show Listen on Listen Notes and, when the returned audio URL is valid, Download audio. Links open their actual destinations through the host bridge for the user to listen or save manually. The card embeds no player and makes no audio request."
             }
           ],
           "negative": [
@@ -94,7 +94,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "Fix desktop MCP startup using standard OAuth discovery. Includes podcast and episode cards, source links, available contact dialogs, and user-initiated audio playback."
+        "release_notes": "Episode cards provide Listen Notes listening links and manual audio download links. Inline audio playback has been removed."
       }
     }
   }

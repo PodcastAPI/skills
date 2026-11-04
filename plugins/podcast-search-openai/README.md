@@ -10,7 +10,7 @@ Published by **Listen Notes, Inc.** Contact: [hello@listennotes.com](mailto:hell
 - Filter results by publication date, episode count, and other supported criteria.
 - Explore recommendations, read playlists, and retrieve available transcripts.
 - View podcast cards with artwork, publisher details, episode counts, and available Web, RSS, Apple Podcasts, and Email buttons. Email opens a contact dialog with a copy action.
-- View episode cards with publication dates, duration, source links, and audio controls. Playback starts on request; a Listen Notes link provides an alternative when playback is unavailable in the client.
+- View episode cards with publication dates, duration, **Listen on Listen Notes**, and **Download audio** links when an audio URL is available. The download link opens the original audio URL so users can save the file manually in their browser. The browser may display its own player before saving.
 
 Cards require an MCP Apps-capable client and the connected server's card tools. Displaying cards from previously fetched results makes no additional Podcast API request.
 
