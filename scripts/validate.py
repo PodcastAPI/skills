@@ -144,7 +144,7 @@ def validate_openai_plugin():
     for field in ('displayName', 'shortDescription'):
         assert 1 <= len(interface[field]) <= 30
     assert interface['developerName'] == PUBLISHER
-    assert interface['category'] == 'Entertainment'
+    assert interface['category'] == 'Business & Operations'
     for field in ('websiteURL', 'privacyPolicyURL', 'termsOfServiceURL', 'supportURL'):
         assert interface[field].startswith('https://www.listennotes.com/')
     assert interface['termsOfServiceURL'] == 'https://www.listennotes.com/terms/'

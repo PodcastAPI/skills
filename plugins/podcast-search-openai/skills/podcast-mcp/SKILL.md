@@ -1,6 +1,6 @@
 ---
 name: podcast-mcp
-description: Find podcasts, episodes, guest interviews, recommendations, and available producer contacts using the Listen Notes MCP server. Use for podcast research, episode-count or date filters, playlist reads, and available transcripts, even when Listen Notes is not named. For building REST or SDK integrations, use podcast-api instead.
+description: Research podcasts, find PR leads through available producer contacts, and monitor podcast mentions using the Listen Notes MCP server. Use for guest interviews, brand or competitor mentions, recommendations, episode-count or date filters, playlist reads, and available transcripts, even when Listen Notes is not named. For building REST or SDK integrations, use podcast-api instead.
 metadata:
   author: "Listen Notes, Inc."
   contact: "hello@listennotes.com"
@@ -8,7 +8,7 @@ metadata:
 
 # Podcast Search by Listen Notes
 
-This skill supports podcast research through the connected Listen Notes MCP tools. Respect the user's chosen sources, tools, and connection, including a local development connection. Tool names below are the server's operation names; the client's namespace or server label can differ.
+This skill supports podcast research, PR lead discovery, and on-demand media monitoring through the connected Listen Notes MCP tools. Respect the user's chosen sources, tools, and connection, including a local development connection. Tool names below are the server's operation names; the client's namespace or server label can differ.
 
 ## Connection and workflow selection
 
@@ -22,6 +22,8 @@ This skill supports podcast research through the connected Listen Notes MCP tool
 
 - **Topic or person:** use `search` with `type=episode`. For guest interviews, search the person's full name rather than requiring the word "interview". If the user identifies someone by a current role, verify the person's name with a current source first. Check titles, descriptions, and available transcript evidence before describing a result as an interview; a name match can be a passing mention.
 - **Show discovery or contacts:** use `search` with `type=podcast` for a topic/name and show-level filters. Fewer than 30 episodes means `episode_count_max=29`. Reuse returned `email`, RSS, counts, and metadata before fetching selected details or a batch. Report unavailable contacts; never guess an address.
+- **PR leads:** discover shows relevant to the user's topic or audience and use available producer contacts for outreach planning. Explain relevance from returned metadata. A contact address does not establish that a show accepts pitches, and a Listen Score is not a guarantee of coverage. Do not send outreach or claim a pitch was delivered.
+- **Media monitoring:** search `type=episode` for a brand, company, competitor, product, or person's name. For verifiable title/description mentions, use `only_in=title,description`; apply the requested publication window and `sort_by_date=1`. Present dates, matching evidence, and source links. Describe these as on-demand search results, with their coverage limits; do not claim every spoken mention was checked or that ongoing monitoring, alerts, or notifications were enabled.
 - **Filter-only requests:** `search` requires a topic or name in `q`. Ask for one, or offer a bounded `getBestPodcasts` selection filtered locally by `total_episodes`. Do not invent a catch-all query or claim a popular-show sample covers the entire catalog.
 - **Known shows, episodes, similarity, playlists, or transcripts:** choose the matching available lookup/recommendation/read tool from its schema or workflow guide. Use returned IDs or supported external identifiers. Prefer `getEpisodeTranscript` when transcript text is requested; transcripts are optional, not a transcription service.
 - **Time ranges:** calculate relative dates from the current date and user's timezone. Use Unix milliseconds for publication filters and distinguish publication date from recording date.

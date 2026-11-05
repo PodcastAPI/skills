@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "podcast-search",
   "version": "1.0.6",
-  "description": "Search podcasts and episodes, discover guest interviews and available producer contacts, and listen to episodes with Listen Notes.",
+  "description": "Research podcasts, find PR leads through available producer contacts, and monitor podcast mentions of brands, companies, and people with Listen Notes.",
   "author": {
     "name": "Listen Notes, Inc.",
     "email": "hello@listennotes.com",
@@ -11,15 +11,15 @@
   "homepage": "https://www.listennotes.com/api/mcp/",
   "repository": "https://github.com/PodcastAPI/skills",
   "license": "MIT",
-  "keywords": ["podcast", "podcasts", "episodes", "interviews", "podcast search", "podcast discovery", "podcast contacts", "transcripts"],
+  "keywords": ["podcast", "podcasts", "episodes", "interviews", "podcast search", "podcast research", "podcast discovery", "podcast contacts", "PR leads", "public relations", "media monitoring", "brand mentions", "transcripts"],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Podcast Search by Listen Notes",
-        "shortDescription": "Podcasts, interviews & audio",
-        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, read accessible playlists, and retrieve available transcripts. Podcast and episode cards show available Listen Score and global-rank badges beside the podcast name. Podcast cards link to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Email opens a contact dialog when accessible. Restricted Email and RSS buttons explain their API access requirements without displaying restricted values. Episode cards provide Listen on Listen Notes links and manual audio download links when an audio URL is available; they do not embed an audio player. Connect your Listen Notes account and select an existing Podcast API app. API account owners can also create an app during authorization; team members select an existing app. Available data and features depend on the connected account's permissions. Tools are read-only: they cannot edit playlists, send outreach, or transcribe uploaded audio.",
+        "shortDescription": "PR leads & media monitoring",
+        "longDescription": "Podcast research, PR lead discovery, and media monitoring for communications teams, marketers, founders, and researchers. Search podcasts, episodes, and guest interviews by topic, person, brand, or keyword. Filter results by publication date, language, genre, or episode count to focus your research.\n\nFind PR leads: discover relevant podcasts, evaluate show details and available Listen Score and global-rank badges, and view available producer email addresses to plan your outreach.\n\nMonitor media mentions: search podcast episode titles and descriptions for your brand, company, competitors, or spokespeople. Review matching episodes with publication dates and source links. Run a new search whenever you want to check for recent coverage.\n\nExplore podcast and episode cards with Listen Notes, publisher website, Apple Podcasts, and RSS links where available. Email opens a contact dialog when accessible. Episode cards provide Listen on Listen Notes and manual audio download links when available. You can also read accessible playlists and retrieve available transcripts.\n\nConnect your Listen Notes account and select a Podcast API app. Account owners can create an app during authorization; team members select an existing app. Available data and features follow your API account's permissions. Restricted Email and RSS buttons explain the required access. The tools are read-only: they cannot send outreach, edit playlists, schedule monitoring alerts, or transcribe uploaded audio.",
         "developerName": "Listen Notes, Inc.",
-        "category": "Entertainment",
+        "category": "Business & Operations",
         "capabilities": ["Search", "Read", "Interactive"],
         "websiteURL": "https://www.listennotes.com/api/mcp/",
         "supportURL": "https://www.listennotes.com/contact/",
@@ -27,8 +27,8 @@
         "termsOfServiceURL": "https://www.listennotes.com/terms/",
         "defaultPrompt": [
           "Find podcast interviews about bootstrapping a startup.",
-          "Find technology podcasts with fewer than 30 episodes and available producer contacts.",
-          "Pick a random podcast episode I can listen to."
+          "Find PR leads: technology podcasts with fewer than 30 episodes and available producer contacts.",
+          "Find podcast episodes mentioning Cloudflare in the past 30 days for media monitoring."
         ],
         "logo": "./assets/logo.png",
         "composerIcon": "./assets/logo.png",
@@ -38,7 +38,8 @@
       "review": {
         "prompts": [
           "Find podcast interviews about bootstrapping a startup.",
-          "Find technology podcasts with fewer than 30 episodes and available producer contacts.",
+          "Find PR leads: technology podcasts with fewer than 30 episodes and available producer contacts.",
+          "Find podcast episodes mentioning Cloudflare in the past 30 days for media monitoring.",
           "Pick a random podcast episode I can listen to.",
           "Show my playlists and the latest added episodes in the largest one."
         ],
@@ -51,16 +52,16 @@
               "expected_behavior": "Search type=episode with q=Patrick Collison. Return up to three relevant matches and distinguish verified interviews from uncertain mentions using returned evidence. Render only selected returned IDs with their originating presentation references. Cards preserve podcast names and exact Listen Notes URLs, showing Listen Score and global rank together beside the podcast name only when both are available and valid. Do not invent a score, rank, or guest participation. Rendering makes no additional API request."
             },
             {
-              "description": "Filter podcasts by episode count and inspect contact access. Use the authorized team-member connection for available contacts, and a FREE connection for the restricted-field variant. No account or plan changes are made through the plugin.",
-              "prompt": "Find technology podcasts with fewer than 30 episodes and available email contacts.",
+              "description": "Find PR leads by filtering relevant podcasts and inspecting available producer contacts and source links. Use the authorized team-member connection for available contacts, and a FREE connection for the restricted-field variant. No account or plan changes are made through the plugin.",
+              "prompt": "Find technology podcasts with fewer than 30 episodes and producer email contacts for my startup's PR outreach.",
               "tools_triggered": "search, renderPodcastCards",
-              "expected_behavior": "Use search with type=podcast, a technology query, and episode_count_max=29. Show only returned qualifying shows and reuse their available contacts. An accessible Email button opens a dialog containing the exact returned address and Copy email action. Restricted Email and RSS buttons remain visible but show neutral PRO/ENTERPRISE access information and an informational link to https://www.listennotes.com/api/mcp/access/. Do not expose restricted values, present an upgrade promotion or checkout action, send outreach, or fabricate a missing contact. Missing fields on an entitled account are distinguished from restricted fields."
+              "expected_behavior": "Use search with type=podcast, q=technology, and episode_count_max=29. Present returned qualifying shows as potential PR leads based on their topic and metadata, without claiming they accept pitches or guaranteeing coverage. Reuse returned contacts and render selected podcast cards using their originating presentation references. Show available Web, RSS, Apple Podcasts, and exact Listen Notes links. An accessible Email button opens a dialog containing the exact returned address and Copy email action. Restricted Email and RSS buttons remain visible but show neutral PRO/ENTERPRISE access information and an informational link to https://www.listennotes.com/api/mcp/access/. Do not expose restricted values, present an upgrade promotion or checkout action, send outreach, or fabricate a missing contact. Missing fields on an entitled account are distinguished from restricted fields."
             },
             {
-              "description": "Podcast source navigation and available Listen Score badges. Use returned data from the authorized API app; no API key is exposed.",
-              "prompt": "Find the podcast Planet Money and show its website, RSS feed and Apple Podcasts links when available.",
-              "tools_triggered": "search, renderPodcastCards",
-              "expected_behavior": "Resolve the show using returned title and publisher evidence. Show available Web, RSS, and Apple Podcasts links plus the exact Listen Notes page URL. Only valid returned Listen Score/global-rank pairs produce a badge such as LS 52 · TOP 0.5%; the example numbers are illustrative and must not be invented. Each link opens its actual destination through the host bridge. A restricted RSS field shows the access notice; a genuinely missing field is omitted."
+              "description": "On-demand media monitoring for recent brand mentions, with dated evidence, episode cards, and source links. Use the current date and the reviewer's timezone; live results may vary or be empty. Use returned data from the authorized API app; no API key is exposed.",
+              "prompt": "Find up to three podcast episodes mentioning Cloudflare in the past 30 days for media monitoring. Show cards and source links.",
+              "tools_triggered": "search, renderEpisodeCards",
+              "expected_behavior": "Calculate the last 30 days from the current time and the user's timezone. Call search with type=episode, q=Cloudflare, only_in=title,description, sort_by_date=1, published_after and published_before as Unix milliseconds, and page_size=3. Present up to three returned matches within that publication window, with dates and title/description evidence of the mention. Render only selected returned IDs using their originating presentation references and preserve the exact Listen Notes URLs. Each link opens its actual destination through the host bridge. Show parent-podcast Listen Score/global-rank badges only when valid returned values are available. If the bounded search is empty, state the date range and that no matching episodes were returned. Do not infer a guest appearance or spoken quote from a keyword match, claim exhaustive coverage of all podcast audio, or claim ongoing monitoring, scheduled alerts, or notifications were enabled."
             },
             {
               "description": "Select a random episode and provide listening and manual audio download links.",
@@ -95,7 +96,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "Podcast and episode cards display available Listen Score/global-rank badges. Restricted Email/RSS buttons explain API access neutrally. Episode cards retain manual audio links without an embedded player. Account owners and team members authorize existing API apps according to their permissions. Includes playlist-read coverage and task-specific tool guidance."
+        "release_notes": "Initial release. Research podcasts, discover guest interviews, find PR leads through available producer contacts, and monitor podcast mentions. Explore podcast and episode cards, your playlists, and links to listen on Listen Notes."
       }
     }
   }

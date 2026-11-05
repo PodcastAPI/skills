@@ -10,7 +10,7 @@
         "source": "local",
         "path": "./plugins/podcast-search-openai"
       },
-      "category": "Entertainment"
+      "category": "Business & Operations"
     },
     {
       "name": "podcast-api",

@@ -1,12 +1,14 @@
 # Podcast Search by Listen Notes
 
-A plugin for ChatGPT and Codex that uses the [Listen Notes Podcast API](https://www.podcastapi.com/) to find podcasts, episodes, guest interviews, and available producer contacts.
+A plugin for ChatGPT and Codex for podcast research, PR lead discovery, and on-demand media monitoring, powered by the [Listen Notes Podcast API](https://www.podcastapi.com/).
 
 Published by **Listen Notes, Inc.** Contact: [hello@listennotes.com](mailto:hello@listennotes.com).
 
 ## Features
 
 - Search podcasts and episodes by topic, person, or keyword.
+- Find relevant podcasts and available producer contacts for PR outreach planning.
+- Check recent podcast episode titles and descriptions for mentions of a brand, company, competitor, or person, with dates and source links. Run a new search to check for later coverage; the plugin does not schedule alerts.
 - Filter results by publication date, episode count, and other supported criteria.
 - Explore recommendations, read playlists, and retrieve available transcripts.
 - View podcast cards with artwork, publisher details, episode counts, and available Web, RSS, Apple Podcasts, and Email buttons. Email opens a contact dialog with a copy action.
@@ -29,7 +31,8 @@ The tools read accessible playlists but do not edit them, send outreach, or tran
 ## Example requests
 
 - "Find podcast interviews about bootstrapping a startup."
-- "Find technology podcasts with fewer than 30 episodes and available producer contacts."
+- "Find PR leads: technology podcasts with fewer than 30 episodes and available producer contacts."
+- "Find podcast episodes mentioning Cloudflare in the past 30 days for media monitoring."
 - "Pick a random podcast episode I can listen to."
 
 The bundled [podcast-mcp skill](skills/podcast-mcp/SKILL.md) provides research workflows, source-link guidance, and handling for pagination and unavailable data.
