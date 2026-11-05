@@ -8,7 +8,7 @@
     "email": "hello@listennotes.com",
     "url": "https://www.listennotes.com/"
   },
-  "homepage": "https://www.listennotes.com/api/",
+  "homepage": "https://www.listennotes.com/api/mcp/",
   "repository": "https://github.com/PodcastAPI/skills",
   "license": "MIT",
   "keywords": ["podcast", "podcasts", "episodes", "interviews", "podcast search", "podcast discovery", "podcast contacts", "transcripts"],
@@ -21,7 +21,7 @@
         "developerName": "Listen Notes, Inc.",
         "category": "Entertainment",
         "capabilities": ["Search", "Read", "Interactive"],
-        "websiteURL": "https://www.listennotes.com/api/",
+        "websiteURL": "https://www.listennotes.com/api/mcp/",
         "supportURL": "https://www.listennotes.com/contact/",
         "privacyPolicyURL": "https://www.listennotes.com/privacy/",
         "termsOfServiceURL": "https://www.listennotes.com/terms/",

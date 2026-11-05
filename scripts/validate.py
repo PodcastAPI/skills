@@ -139,6 +139,7 @@ def validate_openai_plugin():
     assert not plugin.get('apps') and not plugin.get('hooks')
     openai = plugin['extensions']['com.openai']
     interface = openai['interface']
+    assert plugin['homepage'] == interface['websiteURL'] == 'https://www.listennotes.com/api/mcp/'
     assert interface['displayName'] == 'Podcast Search by Listen Notes'
     for field in ('displayName', 'shortDescription'):
         assert 1 <= len(interface[field]) <= 30

@@ -66,4 +66,4 @@ The MCP server and card UI are hosted by Listen Notes and maintained separately 
 
 ## Support
 
-See the [Podcast API documentation](https://www.listennotes.com/api/) or contact [hello@listennotes.com](mailto:hello@listennotes.com).
+Visit [Podcast Search by Listen Notes](https://www.listennotes.com/api/mcp/) or contact [hello@listennotes.com](mailto:hello@listennotes.com).
