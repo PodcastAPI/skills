@@ -9,6 +9,10 @@
   },
   "plugins": [
     {
+      "name": "listennotes-podcast-search",
+      "source": "./plugins/podcast-search-claude"
+    },
+    {
       "name": "podcast-api",
       "source": "./",
       "skills": ["./skills/podcast-api"],

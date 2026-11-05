@@ -70,8 +70,13 @@ def validate_packaging():
 
     assert plugin["name"] == "podcast-api"
     assert re.fullmatch(r"\d+\.\d+\.\d+", plugin["version"])
-    assert len(marketplace["plugins"]) == 1
-    entry = marketplace["plugins"][0]
+    entries = {entry['name']: entry for entry in marketplace['plugins']}
+    assert len(entries) == len(marketplace['plugins']) == 2
+    assert set(entries) == {'podcast-api', 'listennotes-podcast-search'}
+    assert entries['listennotes-podcast-search'] == {
+        'name': 'listennotes-podcast-search', 'source': './plugins/podcast-search-claude',
+    }
+    entry = entries['podcast-api']
     assert entry["name"] == "podcast-api"
     assert entry["source"] == "./"
     # Root marketplace entries can restrict the default skills scan. A skills
@@ -82,6 +87,51 @@ def validate_packaging():
         assert (ROOT / path / "SKILL.md").is_file()
     assert "mcpServers" not in plugin and "mcpServers" not in entry
     assert not (ROOT / ".mcp.json").exists()
+
+
+def validate_claude_plugin():
+    source = ROOT / 'plugins/podcast-search-claude'
+    plugin = load_json('plugins/podcast-search-claude/.claude-plugin/plugin.json')
+    assert plugin['name'] == 'listennotes-podcast-search'
+    assert plugin['displayName'] == 'Podcast Search by Listen Notes'
+    assert re.fullmatch(r'\d+\.\d+\.\d+', plugin['version'])
+    assert plugin['author']['name'] == PUBLISHER and plugin['author']['email'] == CONTACT
+    assert plugin['homepage'] == 'https://www.listennotes.com/api/mcp/'
+    assert plugin['repository'] == 'https://github.com/PodcastAPI/skills'
+    assert plugin['license'] == 'MIT'
+    assert plugin['documentationUrl'] == 'https://github.com/PodcastAPI/skills/tree/main/plugins/podcast-search-claude'
+    assert plugin['supportUrl'] == 'https://www.listennotes.com/contact/'
+    assert plugin['privacyPolicyUrl'] == 'https://www.listennotes.com/privacy/'
+    assert plugin['termsOfServiceUrl'] == 'https://www.listennotes.com/terms/'
+    assert not {'hooks', 'commands', 'agents', 'mcpServers', 'userConfig', 'extensions'} & plugin.keys()
+    assert plugin['icon'] == './assets/logo.png'
+    assert (source / 'LICENSE').read_bytes() == (ROOT / 'LICENSE').read_bytes()
+    readme = (source / 'README.md').read_text()
+    prose = re.sub(r'```.*?```', '', readme, flags=re.DOTALL)
+    assert len(prose.split()) >= 40
+    assert '![Podcast Search by Listen Notes](assets/logo.png)' in readme
+    assert all(value in readme for value in ('PR leads', 'media monitoring', 'Connectors', 'OAuth',
+                                             'API access information', 'Privacy Policy', 'Terms of Service'))
+    assert not (source / 'plugin.json').exists() and not (source / 'mcp.json').exists()
+    mcp = load_json('plugins/podcast-search-claude/.mcp.json')
+    assert mcp == {'mcpServers': {'listen_notes': {'type': 'http', 'url': 'https://mcp.listennotes.com/mcp/'}}}
+    canonical = skill_files(ROOT / 'skills/podcast-mcp')
+    assert skill_files(source / 'skills/podcast-mcp') == canonical, 'Run the Claude build to refresh its skill.'
+    assert {path.name for path in (source / 'skills').iterdir()} == {'podcast-mcp'}
+    for filename in ('logo.png', 'logo-dark.png'):
+        data = (source / 'assets' / filename).read_bytes()
+        assert data == (ROOT / 'plugins/podcast-search-openai/assets' / filename).read_bytes()
+        assert data[:8] == b'\x89PNG\r\n\x1a\n' and len(data) <= 5 * 1024 * 1024
+        width, height = struct.unpack('>II', data[16:24])
+        assert width == height and 256 <= width <= 4096
+    files = [path for path in source.rglob('*') if path.is_file()]
+    assert len(files) <= 512
+    for path in source.rglob('*'):
+        assert not path.is_symlink() and path.resolve().is_relative_to(source.resolve())
+        assert path.name not in {'.DS_Store', 'Thumbs.db', 'desktop.ini', '__MACOSX', '.app.json'}
+        if path.is_file():
+            limit = 5 * 1024 * 1024 if path.suffix.lower() == '.png' else 256 * 1024
+            assert path.stat().st_size < limit, f'Plugin file too large: {path}'
 
 
 def validate_openai_marketplace():
@@ -187,7 +237,8 @@ def validate_openai_plugin():
 if __name__ == "__main__":
     validate_skills()
     validate_packaging()
+    validate_claude_plugin()
     validate_openai_marketplace()
     validate_cases()
     validate_openai_plugin()
-    print("Validated both skills, GitHub marketplaces, MCP dependency, developer-plugin isolation, OpenAI package, and review cases.")
+    print("Validated both skills, GitHub marketplaces, MCP dependencies, developer-plugin isolation, OpenAI/Claude packages, and review cases.")

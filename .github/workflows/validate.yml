@@ -34,8 +34,18 @@ jobs:
       - name: Validate repository contracts
         run: uv run --with PyYAML==6.0.3 python scripts/validate.py
 
-      - name: Build OpenAI plugin
-        run: python scripts/build_plugin.py
+      - name: Test plugin builders
+        run: python -m unittest discover -s scripts -p '*_test.py'
+
+      - name: Build plugin packages
+        run: |
+          python scripts/build_plugin.py
+          python scripts/build_plugin.py --target claude
+
+      - name: Validate Claude plugin and marketplace
+        run: |
+          npx --yes @anthropic-ai/claude-code@2.1.318 plugin validate ./plugins/podcast-search-claude --strict
+          npx --yes @anthropic-ai/claude-code@2.1.318 plugin validate ./.claude-plugin/marketplace.json --strict
 
       - name: Discover skills with skills CLI
         run: npx --yes skills@1.5.11 add "$GITHUB_WORKSPACE" --list

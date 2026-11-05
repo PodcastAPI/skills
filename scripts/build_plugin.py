@@ -1,4 +1,4 @@
-"""Build the OpenAI plugin from its manifest and the canonical research skill."""
+"""Build OpenAI or Claude plugin archives from the canonical research skill."""
 import argparse
 import hashlib
 import json
@@ -7,6 +7,26 @@ import re
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+TARGETS = {
+    'openai': ('podcast-search-openai', 'plugin.json', 'mcp.json'),
+    'claude': ('podcast-search-claude', '.claude-plugin/plugin.json', '.mcp.json'),
+}
+
+
+def package_path(source, relative):
+    """Reject symlinks and escapes before reading or synchronizing a package."""
+    if source.is_symlink() or not source.resolve().is_relative_to(ROOT.resolve()):
+        raise ValueError('Plugin files must not be symbolic links or escape the repository.')
+    path = source
+    for part in Path(relative).parts:
+        if part == '..':
+            raise ValueError('Plugin paths must stay inside the plugin.')
+        path /= part
+        if path.is_symlink():
+            raise ValueError('Plugin files must not be symbolic links.')
+    if not path.resolve().is_relative_to(source.resolve()):
+        raise ValueError('Plugin paths must stay inside the plugin.')
+    return path
 
 
 def skill_files(directory):
@@ -27,9 +47,7 @@ def sync_skill(source):
     files = skill_files(ROOT / 'skills/podcast-mcp')
     if Path('SKILL.md') not in files:
         raise ValueError('The canonical podcast-mcp skill is missing.')
-    directory = source / 'skills/podcast-mcp'
-    if directory.parent.is_symlink():
-        raise ValueError('Plugin files must not be symbolic links.')
+    directory = package_path(source, 'skills/podcast-mcp')
     bundled = skill_files(directory)
     for stale in bundled.keys() - files.keys():
         (directory / stale).unlink()
@@ -40,20 +58,28 @@ def sync_skill(source):
             path.write_bytes(content)
 
 
-def build(output_dir):
-    source = ROOT / 'plugins/podcast-search-openai'
-    manifest = json.loads((source / 'plugin.json').read_text())
+def build(output_dir, target='openai'):
+    if target not in TARGETS:
+        raise ValueError('Unknown plugin target.')
+    directory_name, manifest_name, mcp_name = TARGETS[target]
+    source = ROOT / 'plugins' / directory_name
+    manifest_path = package_path(source, manifest_name)
+    manifest = json.loads(manifest_path.read_text())
     name, version = manifest['name'], manifest['version']
     if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', name) or not re.fullmatch(r'\d+\.\d+\.\d+', version):
         raise ValueError('Invalid plugin name or version.')
+    files = {manifest_path: manifest_name, package_path(source, mcp_name): mcp_name}
+    if target == 'claude':
+        files.update({package_path(source, name): name for name in ('README.md', 'LICENSE')})
+    else:
+        files[ROOT / 'LICENSE'] = 'LICENSE'
+    # Check required inputs before changing the synchronized skill directory.
+    if any(not path.is_file() for path in files):
+        raise ValueError('A required plugin file is missing.')
     sync_skill(source)
-    files = {source / 'plugin.json': 'plugin.json', source / 'mcp.json': 'mcp.json', ROOT / 'LICENSE': 'LICENSE'}
     for directory, prefix in ((source / 'assets', 'assets'), (source / 'skills/podcast-mcp', 'skills/podcast-mcp')):
-        for path in directory.rglob('*'):
-            if path.is_symlink():
-                raise ValueError('Plugin files must not be symbolic links.')
-            if path.is_file() and not any(part.startswith('.') or part == '__pycache__' for part in path.relative_to(directory).parts):
-                files[path] = prefix + '/' + path.relative_to(directory).as_posix()
+        for relative in skill_files(package_path(source, prefix)):
+            files[directory / relative] = prefix + '/' + relative.as_posix()
     output_dir.mkdir(parents=True, exist_ok=True)
     archive = output_dir / f'{name}-{version}.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
@@ -65,8 +91,10 @@ def build(output_dir):
             bundle.writestr(info, path.read_bytes())
     with zipfile.ZipFile(archive) as bundle:
         names = set(bundle.namelist())
-        required = {name + '/' + value for value in ('plugin.json', 'mcp.json', 'skills/podcast-mcp/SKILL.md',
-                                                     'assets/logo.png', 'assets/logo-dark.png')}
+        required = {name + '/' + value for value in (manifest_name, mcp_name, 'LICENSE',
+                    'skills/podcast-mcp/SKILL.md', 'assets/logo.png', 'assets/logo-dark.png')}
+        if target == 'claude':
+            required.add(name + '/README.md')
         if not required <= names or any('.app.json' in value or 'node_modules/' in value for value in names):
             raise ValueError('The built plugin inventory is invalid.')
         if bundle.read(name + '/skills/podcast-mcp/SKILL.md') != (ROOT / 'skills/podcast-mcp/SKILL.md').read_bytes():
@@ -78,6 +106,7 @@ def build(output_dir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--target', choices=TARGETS, default='openai')
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist')
     args = parser.parse_args()
-    build(args.output_dir)
+    build(args.output_dir, args.target)

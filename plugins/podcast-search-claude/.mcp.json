@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "listen_notes": {
+      "type": "http",
+      "url": "https://mcp.listennotes.com/mcp/"
+    }
+  }
+}

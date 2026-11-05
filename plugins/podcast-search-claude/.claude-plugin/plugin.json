@@ -1,0 +1,20 @@
+{
+  "name": "listennotes-podcast-search",
+  "displayName": "Podcast Search by Listen Notes",
+  "version": "1.0.0",
+  "description": "Podcast research, PR lead discovery, and on-demand media monitoring with Listen Notes.",
+  "author": {
+    "name": "Listen Notes, Inc.",
+    "email": "hello@listennotes.com",
+    "url": "https://www.listennotes.com/"
+  },
+  "homepage": "https://www.listennotes.com/api/mcp/",
+  "repository": "https://github.com/PodcastAPI/skills",
+  "license": "MIT",
+  "keywords": ["podcast", "podcast research", "interviews", "PR leads", "public relations", "media monitoring", "brand mentions", "producer contacts"],
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://github.com/PodcastAPI/skills/tree/main/plugins/podcast-search-claude",
+  "supportUrl": "https://www.listennotes.com/contact/",
+  "privacyPolicyUrl": "https://www.listennotes.com/privacy/",
+  "termsOfServiceUrl": "https://www.listennotes.com/terms/"
+}

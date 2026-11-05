@@ -52,16 +52,33 @@ The research skill declares the hosted MCP dependency in `agents/openai.yaml`. C
 
 See the official [Codex Agent Skills documentation](https://developers.openai.com/codex/skills).
 
-### Claude Code Plugin
+### Claude plugins
 
-The developer plugin provides the API integration skill:
+**Podcast Search by Listen Notes** combines the research skill with the hosted OAuth MCP connection. In Claude.ai or Claude Desktop, open **Customize → Plugins → Add → Add marketplace**, enter `https://github.com/PodcastAPI/skills`, and add the research plugin. Open its **Connectors** tab to add or connect Listen Notes, then complete OAuth. A packaged ZIP can also be installed with **Add → Upload plugin**. Installation does not authorize an account; reuse an existing working connector for the same server URL.
+
+For Claude Code:
+
+```text
+/plugin marketplace add PodcastAPI/skills
+/plugin install listennotes-podcast-search@podcastapi
+```
+
+Use `/mcp` to check the connection and complete OAuth, then invoke `/listennotes-podcast-search:podcast-mcp` or describe the research task. See the [Claude plugin documentation](plugins/podcast-search-claude/README.md) for features, account requirements, and examples. Plugin availability depends on the Claude plan and organization settings.
+
+To build the Claude ZIP:
+
+```bash
+python scripts/build_plugin.py --target claude
+```
+
+The separate developer plugin provides the API integration skill:
 
 ```text
 /plugin marketplace add podcastapi/skills
 /plugin install podcast-api@podcastapi
 ```
 
-The marketplace entry includes only `skills/podcast-api`. To use `podcast-mcp` in Claude Code, install it as a standalone skill and connect the remote MCP server through the client's supported flow.
+The developer plugin's marketplace entry includes only `skills/podcast-api`; it does not install the research skill or connect an MCP server.
 
 ### ChatGPT plugin package
 
