@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "podcast-search",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Search podcasts and episodes, discover guest interviews and available producer contacts, and listen to episodes with Listen Notes.",
   "author": {
     "name": "Listen Notes, Inc.",
@@ -94,7 +94,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "Episode cards provide Listen Notes listening links and manual audio download links. Inline audio playback has been removed."
+        "release_notes": "The plugin includes its podcast research skill and hosted MCP connection for installation from a GitHub marketplace."
       }
     }
   }

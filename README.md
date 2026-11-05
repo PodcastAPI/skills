@@ -65,14 +65,28 @@ The marketplace entry includes only `skills/podcast-api`. To use `podcast-mcp` i
 
 ### ChatGPT plugin package
 
-The separate **Podcast Search by Listen Notes** package combines only the research skill with the hosted OAuth MCP connection. Build its ZIP with:
+The **Podcast Search by Listen Notes** package combines the research skill with the hosted OAuth MCP connection.
+
+Workspace admins can import the GitHub marketplace from **Admin → Plugins → Add → Import marketplace**:
+
+| Field | Value |
+| --- | --- |
+| Source | `https://github.com/PodcastAPI/skills` |
+| Path | Leave empty (repository root) |
+| Branch, tag, or commit | `main` |
+
+The OpenAI marketplace in `.agents/plugins/marketplace.json` provides **Podcast Search by Listen Notes** for research and the separate **podcast-api** skill for API development. Select the research plugin and complete OAuth when prompted. Each user connects their own Listen Notes account; importing a marketplace does not authorize anyone's account.
+
+GitHub imports manage workspace plugins and do not publish them to the public directory. Imported MCP plugins may be marked **Desktop only**, even when the server is remote. Check the import results and the client's supported surfaces. See [OpenAI's marketplace import documentation](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
+To build the research plugin's ZIP:
 
 ```bash
-uv run --with PyYAML==6.0.3 python scripts/validate.py
 python scripts/build_plugin.py
+uv run --with PyYAML==6.0.3 python scripts/validate.py
 ```
 
-The build writes a versioned archive to `dist/`, including the research skill, hosted MCP connection, and light and dark theme logos. See the [plugin documentation](plugins/podcast-search-openai/README.md) for features, account setup, and package contents.
+The build refreshes the plugin's bundled research skill from `skills/podcast-mcp`, then writes a versioned archive to `dist/` with the hosted MCP connection and light and dark theme logos. Commit the refreshed skill files with any canonical skill changes so GitHub imports and ZIP installs receive the same content. See the [plugin documentation](plugins/podcast-search-openai/README.md) for features, account setup, and package contents.
 
 ### Manual Installation
 

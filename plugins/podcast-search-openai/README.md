@@ -28,18 +28,24 @@ The MCP service is free. Production API requests use the selected API app's exis
 - "Find technology podcasts with fewer than 30 episodes and available producer contacts."
 - "Pick a random podcast episode I can listen to."
 
-The bundled [podcast-mcp skill](../../skills/podcast-mcp/SKILL.md) provides research workflows, source-link guidance, and handling for pagination and unavailable data.
+The bundled [podcast-mcp skill](skills/podcast-mcp/SKILL.md) provides research workflows, source-link guidance, and handling for pagination and unavailable data.
+
+## Install from a GitHub marketplace
+
+In ChatGPT's **Admin → Plugins → Add → Import marketplace**, use `https://github.com/PodcastAPI/skills` as Source, leave Path empty, and select `main` as the branch. The repository's OpenAI marketplace lists this plugin as `podcast-search` alongside the separate API development skill.
+
+After importing, make the plugin available to the intended workspace members and complete account authorization when prompted. GitHub marketplace import does not publish a public directory listing. Imported MCP plugins may be marked **Desktop only**; see [OpenAI's supported import behavior](https://learn.chatgpt.com/docs/enterprise/plugin-management).
 
 ## Build the package
 
 From the repository root:
 
 ```bash
-uv run --with PyYAML==6.0.3 python scripts/validate.py
 python scripts/build_plugin.py
+uv run --with PyYAML==6.0.3 python scripts/validate.py
 ```
 
-The build writes `dist/podcast-search-<version>.zip`, using the version in `plugin.json`, and prints its path and SHA-256 checksum.
+The build refreshes the bundled skill, writes `dist/podcast-search-<version>.zip` using the version in `plugin.json`, and prints its path and SHA-256 checksum. The plugin directory is also self-contained for GitHub imports.
 
 The package contains:
 
@@ -49,6 +55,8 @@ The package contains:
 | `mcp.json` | Connection to `https://mcp.listennotes.com/mcp/` using Streamable HTTP and server-advertised OAuth discovery |
 | `assets/` | Light and dark theme logos |
 | `skills/podcast-mcp/` | Research skill, copied from the repository's canonical skill directory during the build |
+
+Edit the canonical skill in the repository's `skills/podcast-mcp/` directory, then run the build and validation commands. Include the refreshed plugin skill files in the same commit. Validation checks that the canonical and bundled skills match, including their supporting references and agent configuration.
 
 The MCP server and card UI are hosted by Listen Notes and maintained separately from this package.
 

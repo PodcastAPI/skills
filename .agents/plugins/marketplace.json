@@ -1,0 +1,24 @@
+{
+  "name": "podcastapi",
+  "interface": {
+    "displayName": "Listen Notes"
+  },
+  "plugins": [
+    {
+      "name": "podcast-search",
+      "source": {
+        "source": "local",
+        "path": "./plugins/podcast-search-openai"
+      },
+      "category": "Entertainment"
+    },
+    {
+      "name": "podcast-api",
+      "source": {
+        "source": "local",
+        "path": "./skills/podcast-api"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

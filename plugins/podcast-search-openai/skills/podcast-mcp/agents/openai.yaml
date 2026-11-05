@@ -1,0 +1,15 @@
+interface:
+  display_name: "Podcast Search by Listen Notes"
+  short_description: "Find podcasts, interviews, episodes, and producer contacts"
+  default_prompt: "Use $podcast-mcp to find podcast interviews about startups with Listen Notes links."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "listen_notes"
+      description: "Listen Notes podcast search and research tools"
+      transport: "streamable_http"
+      url: "https://mcp.listennotes.com/mcp/"
+
+policy:
+  allow_implicit_invocation: true

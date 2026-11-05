@@ -9,14 +9,46 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def skill_files(directory):
+    files = {}
+    if directory.is_symlink():
+        raise ValueError('Plugin files must not be symbolic links.')
+    for path in directory.rglob('*'):
+        if path.is_symlink():
+            raise ValueError('Plugin files must not be symbolic links.')
+        relative = path.relative_to(directory)
+        if path.is_file() and not any(part.startswith('.') or part == '__pycache__' for part in relative.parts):
+            files[relative] = path.read_bytes()
+    return files
+
+
+def sync_skill(source):
+    """Keep the Git-importable plugin's skill identical to its canonical source."""
+    files = skill_files(ROOT / 'skills/podcast-mcp')
+    if Path('SKILL.md') not in files:
+        raise ValueError('The canonical podcast-mcp skill is missing.')
+    directory = source / 'skills/podcast-mcp'
+    if directory.parent.is_symlink():
+        raise ValueError('Plugin files must not be symbolic links.')
+    bundled = skill_files(directory)
+    for stale in bundled.keys() - files.keys():
+        (directory / stale).unlink()
+    for relative, content in files.items():
+        if bundled.get(relative) != content:
+            path = directory / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
+
+
 def build(output_dir):
     source = ROOT / 'plugins/podcast-search-openai'
     manifest = json.loads((source / 'plugin.json').read_text())
     name, version = manifest['name'], manifest['version']
     if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', name) or not re.fullmatch(r'\d+\.\d+\.\d+', version):
         raise ValueError('Invalid plugin name or version.')
+    sync_skill(source)
     files = {source / 'plugin.json': 'plugin.json', source / 'mcp.json': 'mcp.json', ROOT / 'LICENSE': 'LICENSE'}
-    for directory, prefix in ((source / 'assets', 'assets'), (ROOT / 'skills/podcast-mcp', 'skills/podcast-mcp')):
+    for directory, prefix in ((source / 'assets', 'assets'), (source / 'skills/podcast-mcp', 'skills/podcast-mcp')):
         for path in directory.rglob('*'):
             if path.is_symlink():
                 raise ValueError('Plugin files must not be symbolic links.')

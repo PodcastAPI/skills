@@ -6,6 +6,8 @@ from pathlib import Path
 
 import yaml
 
+from build_plugin import skill_files
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ("podcast-api", "podcast-mcp")
@@ -82,6 +84,28 @@ def validate_packaging():
     assert not (ROOT / ".mcp.json").exists()
 
 
+def validate_openai_marketplace():
+    marketplace = load_json('.agents/plugins/marketplace.json')
+    assert marketplace['name'] == 'podcastapi'
+    assert marketplace['interface']['displayName'] == 'Listen Notes'
+    entries = marketplace['plugins']
+    assert len(entries) == len({entry['name'] for entry in entries}) == 2
+    sources = {entry['name']: entry['source'] for entry in entries}
+    assert sources == {
+        'podcast-search': {'source': 'local', 'path': './plugins/podcast-search-openai'},
+        'podcast-api': {'source': 'local', 'path': './skills/podcast-api'},
+    }
+    for source in sources.values():
+        directory = (ROOT / source['path']).resolve()
+        assert directory.is_relative_to(ROOT.resolve()) and directory.is_dir()
+    # Import the API skill directly so it cannot also discover the research skill.
+    assert (ROOT / sources['podcast-api']['path'] / 'SKILL.md').is_file()
+    assert load_json(sources['podcast-search']['path'] + '/plugin.json')['name'] == 'podcast-search'
+    canonical = skill_files(ROOT / 'skills/podcast-mcp')
+    bundled = skill_files(ROOT / sources['podcast-search']['path'] / 'skills/podcast-mcp')
+    assert bundled == canonical, 'Run scripts/build_plugin.py to refresh the bundled research skill.'
+
+
 def validate_cases():
     for path in ("evals/cases.json", "evals/podcast-mcp.json"):
         cases = load_json(path)
@@ -155,6 +179,7 @@ def validate_openai_plugin():
 if __name__ == "__main__":
     validate_skills()
     validate_packaging()
+    validate_openai_marketplace()
     validate_cases()
     validate_openai_plugin()
-    print("Validated both skills, MCP dependency, developer-plugin isolation, OpenAI package, and review cases.")
+    print("Validated both skills, GitHub marketplaces, MCP dependency, developer-plugin isolation, OpenAI package, and review cases.")
