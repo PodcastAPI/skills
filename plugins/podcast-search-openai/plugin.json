@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "podcast-search",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Search podcasts and episodes, discover guest interviews and available producer contacts, and listen to episodes with Listen Notes.",
   "author": {
     "name": "Listen Notes, Inc.",
@@ -17,7 +17,7 @@
       "interface": {
         "displayName": "Podcast Search by Listen Notes",
         "shortDescription": "Podcasts, interviews & audio",
-        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, read accessible playlists, and retrieve available transcripts. Podcast and episode cards show available Listen Score and global-rank badges beside the podcast name. Podcast cards link to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Email opens a contact dialog when accessible. Restricted Email and RSS buttons explain their API access requirements without displaying restricted values. Episode cards provide Listen on Listen Notes links and manual audio download links when an audio URL is available; they do not embed an audio player. Connect your Listen Notes account and select an existing Podcast API app. API account owners can also create an app during authorization; team members select an existing app. The MCP service is free, and API requests use the selected app's existing plan, permissions, quota, and billing. Tools are read-only: they cannot edit playlists, send outreach, or transcribe uploaded audio.",
+        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, read accessible playlists, and retrieve available transcripts. Podcast and episode cards show available Listen Score and global-rank badges beside the podcast name. Podcast cards link to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Email opens a contact dialog when accessible. Restricted Email and RSS buttons explain their API access requirements without displaying restricted values. Episode cards provide Listen on Listen Notes links and manual audio download links when an audio URL is available; they do not embed an audio player. Connect your Listen Notes account and select an existing Podcast API app. API account owners can also create an app during authorization; team members select an existing app. Available data and features depend on the connected account's permissions. Tools are read-only: they cannot edit playlists, send outreach, or transcribe uploaded audio.",
         "developerName": "Listen Notes, Inc.",
         "category": "Entertainment",
         "capabilities": ["Search", "Read", "Interactive"],
