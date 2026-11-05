@@ -15,6 +15,12 @@ The research skill requires a connected Listen Notes MCP server. Supported MCP A
 
 The developer skill covers endpoint and SDK selection, secure credentials, pagination, mock testing, and API or billing documentation. It also covers using playlists as a headless CMS: create collections, add curator notes, edit entries, and permanently delete collections after confirmation in the application's UI. The MCP server supports playlist reads, not writes.
 
+## Hosted MCP server
+
+Connect to `https://mcp.listennotes.com/mcp/` using Streamable HTTP and complete OAuth in your client. Use your own Podcast API account or API team access and select an existing API app during authorization. See the [connection instructions](skills/podcast-mcp/references/connection.md) for supported setup flows and access requirements.
+
+The [MCP Registry metadata](registry/server.json) describes the hosted server, publisher, setup documentation, and theme-specific logos for compatible discovery catalogs.
+
 ## Install
 
 ### Skills CLI

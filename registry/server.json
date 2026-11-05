@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.listennotes/mcp",
+  "title": "Podcast Search by Listen Notes",
+  "description": "Official podcast search, interview research, PR leads, and media monitoring from Listen Notes.",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.listennotes.com/api/mcp/",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/PodcastAPI/skills/main/plugins/podcast-search-claude/assets/logo.png",
+      "mimeType": "image/png",
+      "theme": "light"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/PodcastAPI/skills/main/plugins/podcast-search-claude/assets/logo-dark.png",
+      "mimeType": "image/png",
+      "theme": "dark"
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.listennotes.com/mcp/"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "publisher": {
+        "name": "Listen Notes, Inc.",
+        "email": "hello@listennotes.com"
+      },
+      "documentationUrl": "https://github.com/PodcastAPI/skills/tree/main/plugins/podcast-search-claude",
+      "supportUrl": "https://www.listennotes.com/contact/",
+      "privacyPolicyUrl": "https://www.listennotes.com/privacy/",
+      "termsOfServiceUrl": "https://www.listennotes.com/terms/",
+      "authentication": {
+        "type": "oauth2",
+        "required": true,
+        "scopes": ["listenapi:read"]
+      },
+      "requirements": "Connect a Listen Notes account with Podcast API access directly or through an API team. Requests use the selected API app and its account's existing permissions, quota, and billing. The MCP service is free.",
+      "capabilities": ["podcast research", "interview search", "PR lead discovery", "on-demand media monitoring", "playlist reads"]
+    }
+  }
+}
