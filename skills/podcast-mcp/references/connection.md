@@ -14,8 +14,8 @@ Use this reference only when the Listen Notes tools are unavailable, authorizati
 | Contact | hello@listennotes.com |
 
 1. Use the client's supported custom remote MCP connection flow. If the client can act on the skill's declared MCP dependency, follow its connection prompt. Otherwise add the remote server in the client's MCP/connector settings. A skill installation alone does not guarantee tool availability.
-2. Let the user complete sign-in and consent on Listen Notes. They select an existing API app or create a new API app there. Never ask them to paste API keys, OAuth codes, passwords, or tokens into chat or skill files.
-3. The MCP server uses the Production API and the selected app's existing billing; the consent screen has no environment selector. Users without an API account can get an API key through [Podcast API pricing](https://www.listennotes.com/api/pricing/).
+2. Let the user complete sign-in and consent on Listen Notes. They select an existing API app; API account owners can also create one there. Team members select an existing app available through their API account. Never ask them to paste API keys, OAuth codes, passwords, or tokens into chat or skill files.
+3. The MCP server uses the Production API and the selected app's existing billing; the consent screen has no environment selector. A connection requires Podcast API access through the user's own API account or an API team. See [API access information](https://www.listennotes.com/api/mcp/access/) for account and field-access requirements.
 4. Return to the client, refresh its tool list or reopen the conversation if required by that client, and confirm the tools are available. When permitted by the user's environment, call `get_profile` to check the connection; this makes no Podcast API request. Do not claim success until the call succeeds.
 
 ## Troubleshooting

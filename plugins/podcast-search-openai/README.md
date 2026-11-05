@@ -11,16 +11,20 @@ Published by **Listen Notes, Inc.** Contact: [hello@listennotes.com](mailto:hell
 - Explore recommendations, read playlists, and retrieve available transcripts.
 - View podcast cards with artwork, publisher details, episode counts, and available Web, RSS, Apple Podcasts, and Email buttons. Email opens a contact dialog with a copy action.
 - View episode cards with publication dates, duration, **Listen on Listen Notes**, and **Download audio** links when an audio URL is available. The download link opens the original audio URL so users can save the file manually in their browser. The browser may display its own player before saving.
+- Both card types show available Listen Score and global-rank badges beside the podcast name. Unavailable scores are omitted.
+- Restricted Email/RSS buttons show a neutral access notice and an informational link. They do not reveal restricted data or change the API account.
 
 Cards require an MCP Apps-capable client and the connected server's card tools. Displaying cards from previously fetched results makes no additional Podcast API request.
 
 ## Connect your account
 
-When the client requests authorization, sign in to Listen Notes and select an existing Podcast API app or create a new one. The client can reuse an existing authorized connection.
+When the client requests authorization, sign in to Listen Notes and select an existing Podcast API app. API account owners can also create an app during consent; team members select an existing app. The client can reuse an existing authorized connection.
 
-You need a Podcast API account to connect. [Get an API key](https://www.listennotes.com/api/pricing/) if you do not have one. Complete authorization through Listen Notes; keep API keys and access tokens out of chat.
+You need Podcast API access through your own API account or an API team. See [API access information](https://www.listennotes.com/api/mcp/access/) for account and field requirements. Complete authorization through Listen Notes; keep API keys and access tokens out of chat.
 
 The MCP service is free. Production API requests use the selected API app's existing plan and billing.
+
+The tools read accessible playlists but do not edit them, send outreach, or transcribe uploaded audio. [Privacy Policy](https://www.listennotes.com/privacy/) and [Terms of Service](https://www.listennotes.com/terms/) apply.
 
 ## Example requests
 

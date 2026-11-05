@@ -8,7 +8,7 @@ metadata:
 
 # Podcast Search by Listen Notes
 
-Complete podcast research with the connected Listen Notes MCP tools. Respect the user's chosen sources and connection, including a local development connection. Tool names below are the server's operation names; the client's namespace or server label can differ.
+This skill supports podcast research through the connected Listen Notes MCP tools. Respect the user's chosen sources, tools, and connection, including a local development connection. Tool names below are the server's operation names; the client's namespace or server label can differ.
 
 ## Connection and workflow selection
 
@@ -31,6 +31,7 @@ Ask only for missing information that changes the search. Start with a small rel
 ## Bound requests and handle limitations
 
 - MCP calls use the Production API, the API app selected during OAuth, and its existing Podcast API billing. MCP itself is free. Minimize redundant requests and stop once the requested result count or research goal is met.
+- API team members authorize an existing app available through their API account. Only API account owners can create a new app during consent. Never request or share another member's API key.
 - The MCP consent screen has no environment selector. Never change the connection or API hostname through an invented tool argument.
 - If a result has `result_info.next_cursor`, use `getResultPage` for the remaining cached chunks needed for the request before following the original API pagination fields. These chunks make no additional Podcast API request. A new API page can use another request.
 - Keep pagination bounded and deduplicate by returned ID. Stop at an empty completed page, a missing or unchanged cursor, the agreed limit, or an error. Agree on a scope before traversing a large archive.
@@ -48,7 +49,9 @@ Ask only for missing information that changes the search. Start with a small rel
 
 - When the client supports MCP Apps and exposes `renderPodcastCards` or `renderEpisodeCards`, display the relevant final selection after searching or fetching metadata. Pass up to ten items, each containing its returned `id` and the originating result's `result_info.presentation_ref` as `result_ref`. The server verifies these references; do not supply invented card fields or references.
 - Rendering uses cached results and makes no additional Podcast API request. If a reference is missing, expired, or unavailable, present the existing text and Listen Notes links. Do not repeat a billable lookup solely to fill a card or draw its artwork.
-- Podcast cards expose available source links and an email dialog. Episode cards provide Listen on Listen Notes and, when an audio URL is available, Download audio links. The download link opens the returned audio URL for the user to save manually in their browser. Do not promise inline playback, automatic downloads, in-chat transcript display, playlist writes, or fetch-more/similar-item buttons.
+- Both card types show Listen Score and global rank beside the podcast name only when the server supplies valid values. Do not invent missing scores or treat them as episode-specific rankings.
+- Podcast cards expose available source links and an email dialog. Restricted Email/RSS buttons explain their PRO/ENTERPRISE API access requirements and link to [API access information](https://www.listennotes.com/api/mcp/access/), without revealing restricted values or promoting an upgrade. Entitled fields can still be missing from a source.
+- Episode cards provide Download audio when a valid audio URL is available and keep Listen on Listen Notes as the final action. The download link opens the returned audio URL for the user to save manually in their browser. Do not promise inline playback, automatic downloads, in-chat transcript display, playlist writes, or fetch-more/similar-item buttons.
 - Let the cards carry the selected result list. Add useful explanation and evidence without repeating every card's metadata in prose. Text-only clients still receive source links and can complete research without cards.
 
 The MCP tools are read-only. Do not claim to edit playlists, send outreach emails, change accounts, create webhooks, transcribe arbitrary audio, or download/process media. Keep API implementation tasks in the separate `podcast-api` workflow. Support contact: [hello@listennotes.com](mailto:hello@listennotes.com).

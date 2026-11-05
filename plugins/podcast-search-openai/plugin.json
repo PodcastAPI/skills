@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "podcast-search",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Search podcasts and episodes, discover guest interviews and available producer contacts, and listen to episodes with Listen Notes.",
   "author": {
     "name": "Listen Notes, Inc.",
@@ -17,14 +17,14 @@
       "interface": {
         "displayName": "Podcast Search by Listen Notes",
         "shortDescription": "Podcasts, interviews & audio",
-        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, and retrieve available transcripts. View podcast and episode cards with links to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Podcast cards can show an email contact dialog. Episode cards provide Listen on Listen Notes links and manual audio download links when an audio URL is available. Connect your Listen Notes account and select an existing Podcast API app or create one during authorization. API access and availability follow that account's permissions.",
+        "longDescription": "Search podcasts and episodes by topic, person, or keyword. Discover guest interviews, filter shows by episode count, find available producer contacts, read accessible playlists, and retrieve available transcripts. Podcast and episode cards show available Listen Score and global-rank badges beside the podcast name. Podcast cards link to Listen Notes, publisher websites, RSS feeds, and Apple Podcasts where available. Email opens a contact dialog when accessible. Restricted Email and RSS buttons explain their API access requirements without displaying restricted values. Episode cards provide Listen on Listen Notes links and manual audio download links when an audio URL is available; they do not embed an audio player. Connect your Listen Notes account and select an existing Podcast API app. API account owners can also create an app during authorization; team members select an existing app. The MCP service is free, and API requests use the selected app's existing plan, permissions, quota, and billing. Tools are read-only: they cannot edit playlists, send outreach, or transcribe uploaded audio.",
         "developerName": "Listen Notes, Inc.",
         "category": "Entertainment",
         "capabilities": ["Search", "Read", "Interactive"],
         "websiteURL": "https://www.listennotes.com/api/",
         "supportURL": "https://www.listennotes.com/contact/",
         "privacyPolicyURL": "https://www.listennotes.com/privacy/",
-        "termsOfServiceURL": "https://www.listennotes.com/api/terms/",
+        "termsOfServiceURL": "https://www.listennotes.com/terms/",
         "defaultPrompt": [
           "Find podcast interviews about bootstrapping a startup.",
           "Find technology podcasts with fewer than 30 episodes and available producer contacts.",
@@ -39,62 +39,63 @@
         "prompts": [
           "Find podcast interviews about bootstrapping a startup.",
           "Find technology podcasts with fewer than 30 episodes and available producer contacts.",
-          "Pick a random podcast episode I can listen to."
+          "Pick a random podcast episode I can listen to.",
+          "Show my playlists and the latest added episodes in the largest one."
         ],
         "test_cases": {
           "positive": [
             {
-              "description": "Search for relevant podcast episodes by topic and display the selected results as cards.",
-              "prompt": "Find three podcast episodes about bootstrapping a startup and show them as cards.",
+              "description": "Guest interview research distinguishes an interview from a passing mention. Authorize an API team member using an existing app belonging to an entitled API account; authorization must not offer that member app creation.",
+              "prompt": "Find three podcast interviews with Patrick Collison and show the matches as cards.",
               "tools_triggered": "search, renderEpisodeCards",
-              "expected_behavior": "Search type=episode with an appropriate topic query. Display up to three relevant returned episode IDs using their presentation references. Cards contain actual titles, podcast names and Listen Notes links. Rendering makes no additional API request."
+              "expected_behavior": "Search type=episode with q=Patrick Collison. Return up to three relevant matches and distinguish verified interviews from uncertain mentions using returned evidence. Render only selected returned IDs with their originating presentation references. Cards preserve podcast names and exact Listen Notes URLs, showing Listen Score and global rank together beside the podcast name only when both are available and valid. Do not invent a score, rank, or guest participation. Rendering makes no additional API request."
             },
             {
-              "description": "Guest interview research distinguishes guest participation from a passing mention.",
-              "prompt": "Find podcast interviews with Patrick Collison and show the matches.",
-              "tools_triggered": "search, renderEpisodeCards",
-              "expected_behavior": "Search type=episode with the person's name. Use returned evidence to label interviews or uncertain mentions accurately, then display selected results with their exact source links. Do not invent guest participation."
-            },
-            {
-              "description": "Filter podcasts by episode count and display available producer contacts, respecting account permissions and missing data.",
+              "description": "Filter podcasts by episode count and inspect contact access. Use the authorized team-member connection for available contacts, and a FREE connection for the restricted-field variant. No account or plan changes are made through the plugin.",
               "prompt": "Find technology podcasts with fewer than 30 episodes and available email contacts.",
               "tools_triggered": "search, renderPodcastCards",
-              "expected_behavior": "Use type=podcast, a technology query, and episode_count_max=29. Reuse returned contacts. Display qualifying podcast cards; selecting Email opens a selectable dialog with the actual returned address. Hide missing contacts and do not send outreach."
+              "expected_behavior": "Use search with type=podcast, a technology query, and episode_count_max=29. Show only returned qualifying shows and reuse their available contacts. An accessible Email button opens a dialog containing the exact returned address and Copy email action. Restricted Email and RSS buttons remain visible but show neutral PRO/ENTERPRISE access information and an informational link to https://www.listennotes.com/api/mcp/access/. Do not expose restricted values, present an upgrade promotion or checkout action, send outreach, or fabricate a missing contact. Missing fields on an entitled account are distinguished from restricted fields."
             },
             {
-              "description": "Podcast source navigation. Open only actual returned destinations; no website/API credential is exposed.",
+              "description": "Podcast source navigation and available Listen Score badges. Use returned data from the authorized API app; no API key is exposed.",
               "prompt": "Find the podcast Planet Money and show its website, RSS feed and Apple Podcasts links when available.",
               "tools_triggered": "search, renderPodcastCards",
-              "expected_behavior": "Resolve the matching show from returned title/publisher evidence. Show available Web, RSS, and Apple Podcasts buttons alongside the Listen Notes title link. Use the host's external-link bridge; unavailable fields are omitted."
+              "expected_behavior": "Resolve the show using returned title and publisher evidence. Show available Web, RSS, and Apple Podcasts links plus the exact Listen Notes page URL. Only valid returned Listen Score/global-rank pairs produce a badge such as LS 52 · TOP 0.5%; the example numbers are illustrative and must not be invented. Each link opens its actual destination through the host bridge. A restricted RSS field shows the access notice; a genuinely missing field is omitted."
             },
             {
               "description": "Select a random episode and provide listening and manual audio download links.",
               "prompt": "Pick a random episode and show where I can listen to it or download its audio.",
               "tools_triggered": "justListen, renderEpisodeCards",
-              "expected_behavior": "Fetch one random episode, then display it using the same returned ID and presentation reference. Show Listen on Listen Notes and, when the returned audio URL is valid, Download audio. Links open their actual destinations through the host bridge for the user to listen or save manually. The card embeds no player and makes no audio request."
+              "expected_behavior": "Call justListen once and render that same episode using its returned ID and presentation reference. Show available parent-podcast Listen Score/global-rank badges. Show Download audio only for a valid returned audio URL, and keep Listen on Listen Notes as the final card action. Links open their actual destinations through the host bridge; saving audio is a manual browser action. Embed no player, fetch no audio file, and make no extra API request solely to draw a card."
+            },
+            {
+              "description": "Read playlists through API team membership. The API account used for testing has at least two sample playlists, including a largest episode playlist with at least two entries. Compare against that account's playlists, not unrelated personal collections.",
+              "prompt": "Show all my playlists, identify the largest one, and show its two most recently added episodes as cards.",
+              "tools_triggered": "getPlaylists, getPlaylistById, renderEpisodeCards",
+              "expected_behavior": "Read getPlaylists pages until has_next is false, finishing any getResultPage chunks first and deduplicating returned playlist IDs. Identify the largest playlist from returned counts; explain ties or incomplete results. Fetch its episode_list view with sort=recent_added_first and present the first two returned episodes using their exact IDs and presentation references. Distinguish date added from publication date. Do not change the playlist's saved type, order, contents, or permissions. Team membership must grant access through the authorized API account without sharing an API key."
             }
           ],
           "negative": [
             {
-              "description": "Unsupported playlist writes: explain the read-only MCP boundary and make no write attempt.",
+              "description": "Explain that the MCP tools are read-only and cannot add playlist entries. Do not invoke or invent a playlist-write tool, modify a playlist, or claim that an item was added. Existing item lookups do not authorize a write.",
               "prompt": "Add these podcast episodes to my Listen Later playlist."
             },
             {
-              "description": "Unsupported outreach: do not send an email or claim one was sent.",
+              "description": "Explain that the plugin can retrieve available producer contacts but cannot send outreach. Do not invoke or invent an email-sending tool or claim that an email was sent. Offer a draft only if the user wants one.",
               "prompt": "Email all these podcast producers and pitch me as a guest."
             },
             {
-              "description": "Unsupported transcription service: do not process the external audio or promise a generated transcript.",
+              "description": "Explain that the plugin retrieves transcripts already available for indexed episodes but does not transcribe uploaded or arbitrary audio. Do not upload, download, process, or transmit the audio or invent a transcription tool. Do not claim a transcript was generated or saved.",
               "prompt": "Transcribe an audio file from my computer and add the full transcript to Listen Notes."
             }
           ]
         },
         "commerce": false,
-        "commerce_description": "Read-only access through an existing Podcast API account. API usage uses the selected API app's existing billing; the plugin exposes no purchase or checkout tools."
+        "commerce_description": "Read-only access through an existing Podcast API account or its API team. Requests use the selected API app's existing plan and billing. Restricted fields display neutral access information linking to a non-transactional informational page. The plugin exposes no subscription, upgrade, purchase, or checkout actions."
       },
       "publication": {
         "countries": [],
-        "release_notes": "The plugin includes its podcast research skill and hosted MCP connection for installation from a GitHub marketplace."
+        "release_notes": "Podcast and episode cards display available Listen Score/global-rank badges. Restricted Email/RSS buttons explain API access neutrally. Episode cards retain manual audio links without an embedded player. Account owners and team members authorize existing API apps according to their permissions. Includes playlist-read coverage and task-specific tool guidance."
       }
     }
   }

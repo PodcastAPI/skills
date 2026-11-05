@@ -146,6 +146,9 @@ def validate_openai_plugin():
     assert interface['category'] == 'Entertainment'
     for field in ('websiteURL', 'privacyPolicyURL', 'termsOfServiceURL', 'supportURL'):
         assert interface[field].startswith('https://www.listennotes.com/')
+    assert interface['termsOfServiceURL'] == 'https://www.listennotes.com/terms/'
+    assert 1 <= len(interface['defaultPrompt']) <= 3
+    assert all(0 < len(prompt) <= 128 for prompt in interface['defaultPrompt'])
     for field in ('logo', 'logoDark', 'composerIcon', 'composerIconDark'):
         path = source / interface[field]
         assert path.resolve().is_relative_to(source.resolve()) and path.is_file()
@@ -155,8 +158,12 @@ def validate_openai_plugin():
         assert width == height and 256 <= width <= 4096
     review = openai['review']
     assert review['commerce'] is False
-    assert len(review['test_cases']['positive']) >= 5
-    assert len(review['test_cases']['negative']) >= 3
+    assert len(review['test_cases']['positive']) == 5
+    assert len(review['test_cases']['negative']) == 3
+    expected_tools = {tool.strip() for case in review['test_cases']['positive']
+                      for tool in case['tools_triggered'].split(',')}
+    assert {'search', 'renderPodcastCards', 'renderEpisodeCards', 'justListen',
+            'getPlaylists', 'getPlaylistById'} <= expected_tools
     for kind, cases in review['test_cases'].items():
         for case in cases:
             assert case['prompt'].strip() and case['description'].strip()
