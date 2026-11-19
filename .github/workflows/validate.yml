@@ -34,6 +34,9 @@ jobs:
       - name: Validate repository contracts
         run: uv run --with PyYAML==6.0.3 python scripts/validate.py
 
+      - name: Validate Gemini CLI extension
+        run: npx --yes @google/gemini-cli@0.68.0 extensions validate .
+
       - name: Test plugin builders
         run: python -m unittest discover -s scripts -p '*_test.py'
 

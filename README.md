@@ -31,6 +31,33 @@ npx skills add PodcastAPI/skills
 
 Select `podcast-mcp` for research, `podcast-api` for development, or both. To install a specific skill, use `--skill podcast-mcp` or `--skill podcast-api`.
 
+### Gemini CLI and Antigravity CLI
+
+Install the extension from the repository:
+
+```bash
+gemini extensions install https://github.com/PodcastAPI/skills
+```
+
+The extension provides both the `podcast-mcp` research skill and the `podcast-api` development skill, and configures the hosted Listen Notes MCP server.
+
+**Antigravity CLI:** After installing the Gemini extension, import your installed Gemini extensions as Antigravity plugins:
+
+```bash
+agy plugin import gemini
+agy
+```
+
+Sign in to Antigravity if prompted. Run `/mcp`, select `podcast-api-skills_ListenNotes`, and choose **Authenticate**. In the browser, sign in to Listen Notes, select a Podcast API app, and approve the connection. Paste the authorization code from the Antigravity callback page into the waiting terminal prompt. Once connected, ask a podcast research question in the normal prompt.
+
+**Gemini CLI:** Start or restart Gemini CLI. Run `/mcp auth ListenNotes` if prompted to authenticate, and check the connection with `/mcp list`. Google no longer supports Gemini CLI's Google sign-in for individual consumer accounts; see [Google's account deprecation notice](https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals) for supported alternatives.
+
+Complete authentication in the client and browser; never paste API keys, access tokens, or authorization codes into a conversation.
+
+The MCP service is free; Podcast API requests use the selected app's plan and billing. Some features require a PRO or ENTERPRISE API plan. See [API access information](https://www.listennotes.com/api/mcp/access/) and the [connection instructions](skills/podcast-mcp/references/connection.md). To test changes locally, use `gemini extensions validate .` and `gemini extensions link .` from the repository root.
+
+For example, ask: “Find podcast interviews about bootstrapping a startup.”
+
 ### OpenAI Codex
 
 From Codex, use the built-in skill installer and ask it to install the research skill:

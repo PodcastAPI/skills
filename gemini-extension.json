@@ -1,0 +1,11 @@
+{
+  "name": "podcast-api-skills",
+  "version": "1.0.0",
+  "description": "Research podcasts and build applications with the Listen Notes Podcast API.",
+  "mcpServers": {
+    "ListenNotes": {
+      "type": "http",
+      "url": "https://mcp.listennotes.com/mcp/"
+    }
+  }
+}
