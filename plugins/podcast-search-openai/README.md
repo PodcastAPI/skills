@@ -1,4 +1,4 @@
-# Podcast Search by Listen Notes
+# Podcast Search by Listen Notes for ChatGPT and Codex
 
 A plugin for ChatGPT and Codex for podcast research, PR lead discovery, and on-demand media monitoring, powered by the [Listen Notes Podcast API](https://www.podcastapi.com/).
 

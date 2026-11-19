@@ -109,7 +109,6 @@ def validate_claude_plugin():
     readme = (source / 'README.md').read_text()
     prose = re.sub(r'```.*?```', '', readme, flags=re.DOTALL)
     assert len(prose.split()) >= 40
-    assert '![Podcast Search by Listen Notes](assets/logo.png)' in readme
     assert all(value in readme for value in ('PR leads', 'media monitoring', 'Connectors', 'OAuth',
                                              'API access information', 'Privacy Policy', 'Terms of Service'))
     assert not (source / 'plugin.json').exists() and not (source / 'mcp.json').exists()

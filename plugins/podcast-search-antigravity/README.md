@@ -1,4 +1,4 @@
-# Podcast Search by Listen Notes
+# Podcast Search by Listen Notes for Antigravity
 
 Find podcasts and episodes, research guest interviews, find available producer contacts, and search for mentions of a person, company, or topic. This plugin combines the `podcast-mcp` research skill with the hosted Listen Notes MCP server.
 

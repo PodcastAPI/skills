@@ -1,10 +1,8 @@
-# Podcast Search by Listen Notes
+# Podcast Search by Listen Notes for Claude
 
 **PR leads & media monitoring**
 
 Research podcasts, discover guest interviews, find available producer contacts for PR outreach planning, and check recent podcast mentions of your brand, company, or competitors. Published by **Listen Notes, Inc.** Contact: [hello@listennotes.com](mailto:hello@listennotes.com).
-
-![Podcast Search by Listen Notes](assets/logo.png)
 
 ## What you can do
 
