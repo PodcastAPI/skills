@@ -50,6 +50,8 @@ agy
 
 Sign in to Antigravity if prompted. Run `/mcp`, select `podcast-api-skills_ListenNotes`, and choose **Authenticate**. In the browser, sign in to Listen Notes, select a Podcast API app, and approve the connection. Paste the authorization code from the Antigravity callback page into the waiting terminal prompt. Once connected, ask a podcast research question in the normal prompt.
 
+The native [Podcast Search by Listen Notes plugin](plugins/podcast-search-antigravity/README.md) bundles the research skill and MCP connection for Antigravity.
+
 **Gemini CLI:** Start or restart Gemini CLI. Run `/mcp auth ListenNotes` if prompted to authenticate, and check the connection with `/mcp list`. Google no longer supports Gemini CLI's Google sign-in for individual consumer accounts; see [Google's account deprecation notice](https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals) for supported alternatives.
 
 Complete authentication in the client and browser; never paste API keys, access tokens, or authorization codes into a conversation.

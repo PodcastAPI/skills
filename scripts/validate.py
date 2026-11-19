@@ -164,6 +164,29 @@ def validate_cursor_plugin():
         assert not path.is_symlink() and path.resolve().is_relative_to(source.resolve())
 
 
+def validate_antigravity_plugin():
+    source = ROOT / 'plugins/podcast-search-antigravity'
+    plugin = load_json('plugins/podcast-search-antigravity/plugin.json')
+    assert plugin['name'] == 'listen-notes-podcast-search'
+    assert plugin['displayName'] == 'Podcast Search by Listen Notes'
+    assert re.fullmatch(r'\d+\.\d+\.\d+', plugin['version'])
+    assert plugin['description'].strip() and len(plugin['suggestedPrompts']) == 3
+    assert plugin['author']['name'] == PUBLISHER
+    assert plugin['repository'] == 'https://github.com/PodcastAPI/skills'
+    assert plugin['license'] == 'MIT'
+    assert plugin['logo'] == 'assets/logo.png'
+    assert (source / plugin['logo']).read_bytes() == (ROOT / 'plugins/podcast-search-openai/assets/logo.png').read_bytes()
+    assert (source / 'LICENSE').read_bytes() == (ROOT / 'LICENSE').read_bytes()
+    assert load_json('plugins/podcast-search-antigravity/mcp_config.json') == {
+        'mcpServers': {'ListenNotes': {'serverUrl': 'https://mcp.listennotes.com/mcp/'}}}
+    assert skill_files(source / 'skills/podcast-mcp') == skill_files(ROOT / 'skills/podcast-mcp'), (
+        'Run the Antigravity build to refresh its skill.')
+    assert {path.name for path in (source / 'skills').iterdir()} == {'podcast-mcp'}
+    assert (source / 'README.md').is_file()
+    for path in source.rglob('*'):
+        assert not path.is_symlink() and path.resolve().is_relative_to(source.resolve())
+
+
 def validate_openai_marketplace():
     marketplace = load_json('.agents/plugins/marketplace.json')
     assert marketplace['name'] == 'podcastapi'
@@ -269,7 +292,8 @@ if __name__ == "__main__":
     validate_packaging()
     validate_claude_plugin()
     validate_cursor_plugin()
+    validate_antigravity_plugin()
     validate_openai_marketplace()
     validate_cases()
     validate_openai_plugin()
-    print("Validated both skills, GitHub marketplaces, MCP dependencies, developer-plugin isolation, OpenAI/Claude/Cursor packages, and review cases.")
+    print("Validated both skills, GitHub marketplaces, MCP dependencies, developer-plugin isolation, plugin packages, and review cases.")

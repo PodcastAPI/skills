@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "ListenNotes": {
+      "serverUrl": "https://mcp.listennotes.com/mcp/"
+    }
+  }
+}

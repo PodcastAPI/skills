@@ -1,0 +1,21 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "listen-notes-podcast-search",
+  "displayName": "Podcast Search by Listen Notes",
+  "version": "1.0.0",
+  "description": "Discover podcasts and interviews, find available producer contacts, and research mentions with Listen Notes.",
+  "logo": "assets/logo.png",
+  "suggestedPrompts": [
+    "Find podcast interviews about bootstrapping a startup.",
+    "Find technology podcasts with fewer than 30 episodes and available producer contacts.",
+    "Find podcast episodes mentioning Cloudflare in the past 30 days."
+  ],
+  "author": {
+    "name": "Listen Notes, Inc.",
+    "url": "https://www.listennotes.com/"
+  },
+  "homepage": "https://www.listennotes.com/api/mcp/",
+  "repository": "https://github.com/PodcastAPI/skills",
+  "license": "MIT",
+  "keywords": ["podcasts", "podcast-search", "research", "media-monitoring", "public-relations"]
+}
