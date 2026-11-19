@@ -1,0 +1,17 @@
+{
+  "name": "podcastapi",
+  "owner": {
+    "name": "Listen Notes, Inc.",
+    "email": "hello@listennotes.com"
+  },
+  "metadata": {
+    "description": "Podcast research tools from Listen Notes."
+  },
+  "plugins": [
+    {
+      "name": "podcast-search-by-listen-notes",
+      "source": "plugins/podcast-search-cursor",
+      "description": "Research podcasts, find PR leads, and monitor mentions with Listen Notes."
+    }
+  ]
+}

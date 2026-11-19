@@ -140,6 +140,30 @@ class PluginBuildTests(unittest.TestCase):
                 path.unlink()
                 backup.rename(path)
 
+    def test_cursor_archive_contains_cursor_manifest_and_synced_skill(self):
+        source = self.root / 'plugins/podcast-search-cursor'
+        self.write(source / '.cursor-plugin/plugin.json', json.dumps({
+            'name': 'podcast-search-by-listen-notes', 'version': '1.0.0',
+        }))
+        self.write(source / 'mcp.json', json.dumps({
+            'mcpServers': {'listen_notes': {'url': 'https://mcp.listennotes.com/mcp/'}},
+        }))
+        self.write(source / 'README.md', 'Cursor installation and usage')
+        self.write(source / 'LICENSE', 'License fixture')
+        self.write(source / 'assets/logo.png', 'light logo fixture')
+        self.write(source / 'assets/logo-dark.png', 'dark logo fixture')
+        with redirect_stdout(io.StringIO()):
+            archive = build_plugin.build(self.root / 'dist', 'cursor')
+        with zipfile.ZipFile(archive) as bundle:
+            prefix = 'podcast-search-by-listen-notes/'
+            self.assertEqual(bundle.read(prefix + '.cursor-plugin/plugin.json'),
+                             (source / '.cursor-plugin/plugin.json').read_bytes())
+            self.assertEqual(bundle.read(prefix + 'mcp.json'), (source / 'mcp.json').read_bytes())
+            self.assertEqual(bundle.read(prefix + 'skills/podcast-mcp/SKILL.md'),
+                             (self.skill / 'SKILL.md').read_bytes())
+            self.assertEqual(bundle.read(prefix + 'README.md'), (source / 'README.md').read_bytes())
+            self.assertFalse(any('podcast-api/' in name for name in bundle.namelist()))
+
 
 if __name__ == '__main__':
     unittest.main()

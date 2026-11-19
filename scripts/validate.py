@@ -134,6 +134,36 @@ def validate_claude_plugin():
             assert path.stat().st_size < limit, f'Plugin file too large: {path}'
 
 
+def validate_cursor_plugin():
+    source = ROOT / 'plugins/podcast-search-cursor'
+    marketplace = load_json('.cursor-plugin/marketplace.json')
+    plugin = load_json('plugins/podcast-search-cursor/.cursor-plugin/plugin.json')
+    assert marketplace['name'] == 'podcastapi'
+    assert marketplace['owner'] == {'name': PUBLISHER, 'email': CONTACT}
+    entries = marketplace['plugins']
+    assert len(entries) == len({entry['name'] for entry in entries}) == 1
+    assert entries[0]['name'] == plugin['name'] == 'podcast-search-by-listen-notes'
+    assert plugin['displayName'] == 'Podcast Search by Listen Notes'
+    assert entries[0]['source'] == 'plugins/podcast-search-cursor'
+    assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', plugin['name'])
+    assert re.fullmatch(r'\d+\.\d+\.\d+', plugin['version'])
+    assert plugin['description'].strip()
+    assert plugin['author'] == {'name': PUBLISHER, 'email': CONTACT}
+    assert plugin['repository'] == 'https://github.com/PodcastAPI/skills'
+    assert plugin['license'] == 'MIT'
+    assert plugin['logo'] == 'assets/logo.png'
+    assert (source / plugin['logo']).read_bytes() == (ROOT / 'plugins/podcast-search-openai/assets/logo.png').read_bytes()
+    assert (source / 'LICENSE').read_bytes() == (ROOT / 'LICENSE').read_bytes()
+    assert load_json('plugins/podcast-search-cursor/mcp.json') == {
+        'mcpServers': {'listen_notes': {'url': 'https://mcp.listennotes.com/mcp/'}}}
+    assert skill_files(source / 'skills/podcast-mcp') == skill_files(ROOT / 'skills/podcast-mcp'), (
+        'Run the Cursor build to refresh its skill.')
+    assert {path.name for path in (source / 'skills').iterdir()} == {'podcast-mcp'}
+    assert (source / 'README.md').is_file()
+    for path in source.rglob('*'):
+        assert not path.is_symlink() and path.resolve().is_relative_to(source.resolve())
+
+
 def validate_openai_marketplace():
     marketplace = load_json('.agents/plugins/marketplace.json')
     assert marketplace['name'] == 'podcastapi'
@@ -238,7 +268,8 @@ if __name__ == "__main__":
     validate_skills()
     validate_packaging()
     validate_claude_plugin()
+    validate_cursor_plugin()
     validate_openai_marketplace()
     validate_cases()
     validate_openai_plugin()
-    print("Validated both skills, GitHub marketplaces, MCP dependencies, developer-plugin isolation, OpenAI/Claude packages, and review cases.")
+    print("Validated both skills, GitHub marketplaces, MCP dependencies, developer-plugin isolation, OpenAI/Claude/Cursor packages, and review cases.")

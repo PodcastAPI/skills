@@ -1,4 +1,4 @@
-"""Build OpenAI or Claude plugin archives from the canonical research skill."""
+"""Build plugin archives from the canonical research skill."""
 import argparse
 import hashlib
 import json
@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGETS = {
     'openai': ('podcast-search-openai', 'plugin.json', 'mcp.json'),
     'claude': ('podcast-search-claude', '.claude-plugin/plugin.json', '.mcp.json'),
+    'cursor': ('podcast-search-cursor', '.cursor-plugin/plugin.json', 'mcp.json'),
 }
 
 
@@ -69,7 +70,7 @@ def build(output_dir, target='openai'):
     if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', name) or not re.fullmatch(r'\d+\.\d+\.\d+', version):
         raise ValueError('Invalid plugin name or version.')
     files = {manifest_path: manifest_name, package_path(source, mcp_name): mcp_name}
-    if target == 'claude':
+    if target in ('claude', 'cursor'):
         files.update({package_path(source, name): name for name in ('README.md', 'LICENSE')})
     else:
         files[ROOT / 'LICENSE'] = 'LICENSE'
@@ -93,7 +94,7 @@ def build(output_dir, target='openai'):
         names = set(bundle.namelist())
         required = {name + '/' + value for value in (manifest_name, mcp_name, 'LICENSE',
                     'skills/podcast-mcp/SKILL.md', 'assets/logo.png', 'assets/logo-dark.png')}
-        if target == 'claude':
+        if target in ('claude', 'cursor'):
             required.add(name + '/README.md')
         if not required <= names or any('.app.json' in value or 'node_modules/' in value for value in names):
             raise ValueError('The built plugin inventory is invalid.')

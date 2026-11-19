@@ -86,6 +86,18 @@ The separate developer plugin provides the API integration skill:
 
 The developer plugin's marketplace entry includes only `skills/podcast-api`; it does not install the research skill or connect an MCP server.
 
+### Cursor plugin
+
+**Podcast Search by Listen Notes** combines the research skill with the hosted OAuth MCP connection. Install it from a Cursor marketplace and connect the Listen Notes server when prompted. See the [Cursor plugin documentation](plugins/podcast-search-cursor/README.md) for account requirements, examples, and local testing.
+
+To build the Cursor package and refresh its bundled skill:
+
+```bash
+python scripts/build_plugin.py --target cursor
+```
+
+The root `.cursor-plugin/marketplace.json` lists the Cursor plugin. Commit the refreshed skill files with changes to `skills/podcast-mcp` so GitHub imports receive the updated skill.
+
 ### ChatGPT plugin package
 
 The **Podcast Search by Listen Notes** package combines the research skill with the hosted OAuth MCP connection.

@@ -41,6 +41,7 @@ jobs:
         run: |
           python scripts/build_plugin.py
           python scripts/build_plugin.py --target claude
+          python scripts/build_plugin.py --target cursor
 
       - name: Validate Claude plugin and marketplace
         run: |

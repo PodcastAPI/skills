@@ -1,0 +1,15 @@
+{
+  "name": "podcast-search-by-listen-notes",
+  "displayName": "Podcast Search by Listen Notes",
+  "version": "1.0.0",
+  "description": "Research podcasts, find PR leads through available producer contacts, and monitor podcast mentions with Listen Notes.",
+  "author": {
+    "name": "Listen Notes, Inc.",
+    "email": "hello@listennotes.com"
+  },
+  "homepage": "https://www.listennotes.com/api/mcp/",
+  "repository": "https://github.com/PodcastAPI/skills",
+  "license": "MIT",
+  "keywords": ["podcasts", "podcast-search", "research", "media-monitoring", "public-relations"],
+  "logo": "assets/logo.png"
+}
