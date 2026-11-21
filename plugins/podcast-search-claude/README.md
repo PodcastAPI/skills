@@ -54,7 +54,7 @@ You need Podcast API access through your own API account or an API team. Request
 
 Email and RSS require PRO or ENTERPRISE API access and can still be absent from a source. Restricted buttons show an access notice without revealing restricted values. The tools cannot send outreach, edit playlists, change accounts, or transcribe uploaded audio.
 
-The plugin connects to Listen Notes; it does not run a local server or require credentials in its files. Research queries and identifiers go to the Listen Notes MCP server and Podcast API. Opening a publisher, RSS, Apple Podcasts, or audio link visits that destination through Claude's link controls. Listen Notes does not record chat messages. API request logs are retained unless the API account owner deletes the account; fetched results are cached for ten minutes. You can revoke a connection from [MCP connections](https://www.listennotes.com/api/mcp/connections/).
+The plugin connects to Listen Notes; it does not run a local server or require credentials in its files. Research queries and identifiers go to the Listen Notes MCP server and Podcast API. Opening a publisher, RSS, Apple Podcasts, or audio link visits that destination through Claude's link controls. Listen Notes does not record chat messages. API request logs are retained unless the API account owner deletes the account; fetched results are cached for ten minutes. To revoke a connection, go to [API Keys in the API dashboard](https://www.listennotes.com/api/dashboard/#apps), select your API app, and open **MCP connections**.
 
 [Website](https://www.listennotes.com/api/mcp/) · [Support](https://www.listennotes.com/contact/) · [Privacy Policy](https://www.listennotes.com/privacy/) · [Terms of Service](https://www.listennotes.com/terms/)
 
