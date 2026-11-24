@@ -46,6 +46,7 @@ jobs:
           python scripts/build_plugin.py --target claude
           python scripts/build_plugin.py --target cursor
           python scripts/build_plugin.py --target antigravity
+          python scripts/build_plugin.py --target devin
 
       - name: Validate Claude plugin and marketplace
         run: |
@@ -96,6 +97,7 @@ jobs:
             --exclude '^https://listen-api-test\.listennotes\.com/api/v2'
             --exclude '^https://(www\.)?listennotes\.com/'
             --exclude '^https://(www\.)?podcastapi\.com/'
+            --exclude '^https://www\.perplexity\.ai/computer/plugins/connectors/listen_notes$'
             './README.md'
             './AGENTS.md'
             './plugins/**/*.md'

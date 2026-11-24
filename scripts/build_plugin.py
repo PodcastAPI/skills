@@ -12,6 +12,7 @@ TARGETS = {
     'claude': ('podcast-search-claude', '.claude-plugin/plugin.json', '.mcp.json'),
     'cursor': ('podcast-search-cursor', '.cursor-plugin/plugin.json', 'mcp.json'),
     'antigravity': ('podcast-search-antigravity', 'plugin.json', 'mcp_config.json'),
+    'devin': ('podcast-search-devin', '.devin-plugin/plugin.json', None),
 }
 
 
@@ -70,8 +71,10 @@ def build(output_dir, target='openai'):
     name, version = manifest['name'], manifest['version']
     if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', name) or not re.fullmatch(r'\d+\.\d+\.\d+', version):
         raise ValueError('Invalid plugin name or version.')
-    files = {manifest_path: manifest_name, package_path(source, mcp_name): mcp_name}
-    if target in ('claude', 'cursor', 'antigravity'):
+    files = {manifest_path: manifest_name}
+    if mcp_name:
+        files[package_path(source, mcp_name)] = mcp_name
+    if target != 'openai':
         files.update({package_path(source, name): name for name in ('README.md', 'LICENSE')})
     else:
         files[ROOT / 'LICENSE'] = 'LICENSE'
@@ -93,9 +96,11 @@ def build(output_dir, target='openai'):
             bundle.writestr(info, path.read_bytes())
     with zipfile.ZipFile(archive) as bundle:
         names = set(bundle.namelist())
-        required = {name + '/' + value for value in (manifest_name, mcp_name, 'LICENSE',
+        required = {name + '/' + value for value in (manifest_name, 'LICENSE',
                     'skills/podcast-mcp/SKILL.md', 'assets/logo.png', 'assets/logo-dark.png')}
-        if target in ('claude', 'cursor', 'antigravity'):
+        if mcp_name:
+            required.add(name + '/' + mcp_name)
+        if target != 'openai':
             required.add(name + '/README.md')
         if not required <= names or any('.app.json' in value or 'node_modules/' in value for value in names):
             raise ValueError('The built plugin inventory is invalid.')
