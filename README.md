@@ -133,9 +133,9 @@ The root `.cursor-plugin/marketplace.json` lists the Cursor plugin. Commit the r
 
 Build the uploadable ZIP and refresh the bundled skill with `python scripts/build_plugin.py --target devin`.
 
-### ChatGPT plugin package
+### ChatGPT plugin
 
-The **Podcast Search by Listen Notes** package combines the research skill with the hosted OAuth MCP connection.
+Install the official [Podcast Search by Listen Notes plugin](https://chatgpt.com/plugins/plugin_asdk_app_6aecd9304b88819193ae95e7f9bcd92b) from the ChatGPT plugin directory. The plugin combines the research skill with the hosted OAuth MCP connection.
 
 Workspace admins can import the GitHub marketplace from **Admin → Plugins → Add → Import marketplace**:
 
@@ -157,6 +157,10 @@ uv run --with PyYAML==6.0.3 python scripts/validate.py
 ```
 
 The build refreshes the plugin's bundled research skill from `skills/podcast-mcp`, then writes a versioned archive to `dist/` with the hosted MCP connection and light and dark theme logos. Commit the refreshed skill files with any canonical skill changes so GitHub imports and ZIP installs receive the same content. See the [plugin documentation](plugins/podcast-search-openai/README.md) for features, account setup, and package contents.
+
+### Perplexity Computer plugin
+
+Install the official [Listen Notes plugin for Perplexity Computer](https://www.perplexity.ai/computer/plugins/connectors/listen_notes).
 
 ### Manual Installation
 
