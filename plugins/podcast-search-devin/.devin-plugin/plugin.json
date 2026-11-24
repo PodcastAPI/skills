@@ -1,0 +1,19 @@
+{
+  "name": "podcast-search-devin",
+  "displayName": "Podcast Search by Listen Notes",
+  "version": "1.0.0",
+  "description": "Find guest interviews, discover podcasts to pitch, and search episodes for brand or competitor mentions",
+  "shortDescription": "Podcast and episode search",
+  "setup": {
+    "notice": "Requires a Listen Notes account with Podcast API access. Requests count toward the selected API app's existing quota and billing."
+  },
+  "homepage": "https://www.listennotes.com/api/mcp/",
+  "repository": "https://github.com/PodcastAPI/skills",
+  "logo": "assets/logo.png",
+  "keywords": ["Productivity", "Research", "Podcasts"],
+  "mcpServers": {
+    "listen-notes": {
+      "url": "https://mcp.listennotes.com/mcp/"
+    }
+  }
+}

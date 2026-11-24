@@ -127,6 +127,12 @@ python scripts/build_plugin.py --target cursor
 
 The root `.cursor-plugin/marketplace.json` lists the Cursor plugin. Commit the refreshed skill files with changes to `skills/podcast-mcp` so GitHub imports receive the updated skill.
 
+### Devin plugin
+
+**Podcast Search by Listen Notes** bundles the research skill and the hosted OAuth MCP connection for Devin Cloud and the Devin CLI. See the [Devin plugin documentation](plugins/podcast-search-devin/README.md) for installation and account setup.
+
+Build the uploadable ZIP and refresh the bundled skill with `python scripts/build_plugin.py --target devin`.
+
 ### ChatGPT plugin package
 
 The **Podcast Search by Listen Notes** package combines the research skill with the hosted OAuth MCP connection.

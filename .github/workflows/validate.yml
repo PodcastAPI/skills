@@ -46,6 +46,7 @@ jobs:
           python scripts/build_plugin.py --target claude
           python scripts/build_plugin.py --target cursor
           python scripts/build_plugin.py --target antigravity
+          python scripts/build_plugin.py --target devin
 
       - name: Validate Claude plugin and marketplace
         run: |

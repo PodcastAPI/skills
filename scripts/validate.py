@@ -186,6 +186,23 @@ def validate_antigravity_plugin():
         assert not path.is_symlink() and path.resolve().is_relative_to(source.resolve())
 
 
+def validate_devin_plugin():
+    source = ROOT / 'plugins/podcast-search-devin'
+    plugin = load_json('plugins/podcast-search-devin/.devin-plugin/plugin.json')
+    assert plugin['name'] == source.name
+    assert plugin['displayName'] == 'Podcast Search by Listen Notes'
+    assert re.fullmatch(r'\d+\.\d+\.\d+', plugin['version'])
+    assert 60 <= len(plugin['description']) <= 130 and not plugin['description'].endswith('.')
+    assert 1 <= len(plugin['shortDescription']) <= 40
+    assert plugin['mcpServers'] == {'listen-notes': {'url': 'https://mcp.listennotes.com/mcp/'}}
+    assert (source / plugin['logo']).read_bytes() == (ROOT / 'plugins/podcast-search-openai/assets/logo.png').read_bytes()
+    assert (source / 'LICENSE').read_bytes() == (ROOT / 'LICENSE').read_bytes()
+    assert skill_files(source / 'skills/podcast-mcp') == skill_files(ROOT / 'skills/podcast-mcp'), (
+        'Run the Devin build to refresh its skill.')
+    assert {path.name for path in (source / 'skills').iterdir()} == {'podcast-mcp'}
+    assert not any((source / filename).exists() for filename in ('plugin.json', '.mcp.json', 'mcp.json', 'mcp_config.json'))
+
+
 def validate_openai_marketplace():
     marketplace = load_json('.agents/plugins/marketplace.json')
     assert marketplace['name'] == 'podcastapi'
@@ -292,6 +309,7 @@ if __name__ == "__main__":
     validate_claude_plugin()
     validate_cursor_plugin()
     validate_antigravity_plugin()
+    validate_devin_plugin()
     validate_openai_marketplace()
     validate_cases()
     validate_openai_plugin()
