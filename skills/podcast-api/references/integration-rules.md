@@ -16,6 +16,7 @@ Reuse the project's configuration and HTTP abstractions. Add timeouts and cancel
 Use the live [OpenAPI document](https://listen-api.listennotes.com/api/v2/openapi.yaml) for operation-specific responses. Handle these common classes:
 
 - `200` / `201`: parse the documented JSON body and optionally capture usage headers. Playlist creation and new/restored items return `201`; an already-present item returns `200`.
+- `202`: the transcription request is queued or processing. Use the polling endpoint to follow its status.
 - `400`: reject or correct invalid application inputs; do not retry unchanged requests.
 - `401`: inspect the safe upstream error message. It can indicate invalid credentials, inaccessible private content, or a plan restriction; do not report every `401` as a bad key.
 - `403`: surface the ownership or permission failure. Playlist writes require ownership by the admin API account, even if the playlist can be read.
@@ -40,6 +41,7 @@ Follow response-provided cursors instead of calculating them yourself.
 | `GET /playlists/{id}` | `last_timestamp_ms` | response `last_timestamp_ms` | no items or usable cursor remains |
 | `GET /playlists` | `page` | response `next_page_number` | `has_next` is false |
 | `GET /podcasts/domains/{domain_name}` | `page` | response `next_page_number` | no next page remains |
+| `GET /transcripts` | `cursor` | response `next_cursor` | `next_cursor` is `null` |
 
 Add a maximum page or item bound unless the user explicitly needs exhaustive traversal. Guard against repeated cursors to prevent infinite loops. Preserve the endpoint's sort order while paging.
 
@@ -58,7 +60,7 @@ Use usage headers for monitoring or warnings, not as authorization. A `HEAD` req
 
 ## Caching, Storage, And Attribution
 
-For current FREE and PRO terms, client-side response caching is allowed, but server-side response storage is restricted. The FAQ currently permits permanent server-side storage of podcast or episode IDs and publication dates, and permits storing or processing podcast audio files. Enterprise terms can allow broader server-side storage.
+FREE and PRO allow client-side response caching and restrict server-side storage of full API responses. You can cache podcast and episode IDs, publication dates, and transcript text generated on demand for your API account on your servers. You can also store and process podcast audio files. Use signed transcript links for immediate downloads and poll again when you need a fresh link. Enterprise terms can allow broader server-side storage.
 
 Applications displaying API data under FREE or PRO terms must currently show a `Powered by Listen Notes` logo on at least one screen or page that uses the data. Enterprise terms may differ.
 

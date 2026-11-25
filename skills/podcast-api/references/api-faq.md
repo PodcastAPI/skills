@@ -4,7 +4,7 @@ Use the live [API FAQ](https://www.listennotes.com/api/faq/) and [terms](https:/
 
 ## Product And Support
 
-- Listen API provides podcast and episode search, structured metadata, discovery, playlists, and related operations that general catalog APIs may not provide.
+- Listen API provides podcast and episode search, structured metadata, discovery, playlists, and [on-demand episode transcription](playlists-and-media.md#on-demand-transcription).
 - Listen Notes states that the API is actively supported and also powers ListenNotes.com.
 - PRO and Enterprise customers receive prioritized email support at `hello@listennotes.com`; current support terms can change.
 - The service reports serving customers at large request volumes, but do not promise capacity or an SLA beyond the user's contract.
@@ -14,12 +14,11 @@ Use the live [API FAQ](https://www.listennotes.com/api/faq/) and [terms](https:/
 - Missing podcasts can be submitted to Listen Notes.
 - Incorrect or stale metadata can be reported to `hello@listennotes.com` or corrected through available self-service tools.
 - Do not promise immediate feed updates. Freshness depends on crawl timing and feed health.
-- Use the documented RSS-refresh operation only for its intended workflow and plan.
 
 ## Caching And Attribution
 
-- Current FREE/PRO policy allows client-side caching but restricts server-side storage of API responses.
-- The FAQ currently allows server-side storage of podcast/episode IDs and publication dates, plus storage or processing of podcast audio files.
+- FREE and PRO allow client-side caching and restrict server-side storage of full API responses.
+- You can cache podcast and episode IDs, publication dates, and transcript text generated on demand for your API account on your servers. You can also store and process podcast audio files. Use signed transcript links for immediate downloads and poll again when you need a fresh link.
 - Enterprise agreements can permit broader server-side storage.
 - Current FREE/PRO terms require `Powered by Listen Notes` attribution on at least one screen or page displaying API data; Enterprise terms can differ.
 - Violating quota or caching restrictions can lead to suspension.

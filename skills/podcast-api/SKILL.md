@@ -1,6 +1,6 @@
 ---
 name: podcast-api
-description: Build, debug, review, and explain applications that integrate the Listen Notes Podcast API through REST endpoints or SDKs. Use for endpoint and SDK selection, server-side API keys, integration code, pagination, testing, playlist editing, and API or billing documentation questions. For finding podcasts or episodes with connected MCP tools, use podcast-mcp instead.
+description: Build, debug, review, and explain applications that integrate the Listen Notes Podcast API through REST endpoints or SDKs. Use for endpoint and SDK selection, server-side API keys, integration code, pagination, testing, playlist editing, on-demand episode transcription, and API or billing documentation questions. For finding podcasts or episodes with connected MCP tools, use podcast-mcp instead.
 metadata:
   author: "Listen Notes, Inc."
   contact: "hello@listennotes.com"
@@ -28,6 +28,7 @@ Do not copy a remembered schema into an implementation. Verify the relevant Open
    - Read [endpoint-selection.md](references/endpoint-selection.md).
    - Load only the use-case reference relevant to the request.
    - Confirm the operation in the live OpenAPI document, including plan restrictions and pagination fields.
+   - To retrieve an existing transcript or generate one on demand, read [playlists-and-media.md](references/playlists-and-media.md#transcripts).
    - For an editorial feed, curated collection, or headless CMS, read [playlist-cms.md](references/playlist-cms.md). Playlists support both API editing and human curation in Listen Later.
 3. Design the security boundary.
    - Read `LISTEN_API_KEY` only in server-side code or a serverless function.

@@ -13,11 +13,29 @@ Sources: [playlist tutorial](https://www.listennotes.help/article/45-how-to-buil
 
 ## Transcripts
 
-Use `GET /episodes/{id}` and verify the current transcript parameter and response field in OpenAPI. Treat transcripts as optional: most episodes do not have one. Design an explicit missing-transcript state.
+### Existing episode transcripts
 
-If the product needs transcripts for episodes without them, retrieve the documented audio URL and integrate a separate speech-to-text service only when the user asks for that larger workflow. Do not imply that Podcast API itself transcribes arbitrary audio.
+Existing transcripts on Listen Notes include transcripts supplied by podcast producers. About 12% of new episodes and over 3% of all episodes have one. With `GET /episodes/{id}?show_transcript=1`, PRO and ENTERPRISE receive sanitized HTML in `transcript` or `null` if unavailable. FREE receives a plan-upgrade message. Use `GET /search` with `type=episode` and `only_in=audio` to search indexed transcript content.
 
 Source: [transcript tutorial](https://www.listennotes.help/article/35-how-to-get-transcripts-of-any-podcast-episodes-using-podcast-api).
+
+### On-demand transcription
+
+If an episode has no existing transcript, use its Listen Notes episode ID to generate one. Transcription is available on FREE, PRO, and ENTERPRISE. Enable Transcription in the API dashboard and add a payment method or use an eligible invoicing arrangement. Use direct HTTP requests from your backend for these operations.
+
+1. **Estimate** with `GET /episodes/{id}/transcript/estimate`. The estimate uses episode duration metadata and can be `null` when duration is unavailable. It does not reserve included minutes.
+2. **Request** with `POST /episodes/{id}/transcript`. HTTP `202` means queued or processing. HTTP `200` means a completed transcript already exists for your API account. Repeating a pending or completed request for the same episode and account reuses it without another transcription charge.
+3. **Poll** with `GET /episodes/{id}/transcript`. Follow `Retry-After` while pending. A completed job returns signed links in `download_urls` for TXT, SRT, VTT, and word-level JSON. A failed job returns `error.code`.
+4. **List** completed transcripts with `GET /transcripts`. Pass each `next_cursor` into `cursor` until `next_cursor` is `null`. Follow an item's `transcript_url` to poll and obtain fresh download links.
+
+For example, estimate transcription from the backend with an existing `EPISODE_ID`:
+
+```bash
+curl -fsS -H "X-ListenAPI-Key: ${LISTEN_API_KEY}" \
+  "https://listen-api.listennotes.com/api/v2/episodes/${EPISODE_ID}/transcript/estimate"
+```
+
+Cache the transcript text generated for your API account. Use signed links for immediate downloads. They expire after 15 minutes, and polling returns fresh links. Direct downloads use no request quota. Successful API calls, including polling, follow normal request accounting. [Transcription API FAQ](https://www.listennotes.com/api/faq/#faq20) · [Billing FAQ](https://www.listennotes.com/api/billing-faq/#faq17)
 
 ## Audio And Clips
 

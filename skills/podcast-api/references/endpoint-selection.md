@@ -18,7 +18,7 @@ Use this map to find a likely operation, then verify its exact contract in the l
 | Task | Operation | Use when |
 | --- | --- | --- |
 | Podcast details and episodes | `GET /podcasts/{id}` | Fetch one podcast and page through its episodes. |
-| Episode details | `GET /episodes/{id}` | Fetch one episode; verify transcript parameters and availability in OpenAPI. |
+| Episode details | `GET /episodes/{id}` | Fetch one episode. On PRO and ENTERPRISE, use `show_transcript=1` to retrieve an existing transcript when available. |
 | Batch episode lookup | `POST /episodes` | Fetch metadata for multiple known episode IDs. |
 | Batch podcast lookup | `POST /podcasts` | Resolve multiple Listen Notes, Apple Podcasts, Spotify, or RSS identifiers and optionally fetch latest episodes. |
 | Popular podcasts | `GET /best_podcasts` | Browse podcasts by genre, region, language, publisher region, or popularity. |
@@ -31,6 +31,17 @@ Use this map to find a likely operation, then verify its exact contract in the l
 | Curated list details | `GET /curated_podcasts/{id}` | Fetch one editorially curated podcast list. |
 | Curated list index | `GET /curated_podcasts` | Browse curated podcast lists. |
 | Publisher-domain lookup | `GET /podcasts/domains/{domain_name}` | Find podcasts associated with a publisher's domain. |
+
+## On-Demand Transcription
+
+| Task | Operation | Use when |
+| --- | --- | --- |
+| Estimate transcription | `GET /episodes/{id}/transcript/estimate` | Estimate minutes and fees before submitting a request. |
+| Request transcription | `POST /episodes/{id}/transcript` | Generate a transcript for a Listen Notes episode ID. |
+| Poll transcription | `GET /episodes/{id}/transcript` | Check status and get fresh signed download links when complete. |
+| List completed transcripts | `GET /transcripts` | Page through transcripts generated for your API account. |
+
+Read [playlists-and-media.md](playlists-and-media.md#on-demand-transcription) for setup, polling, and downloads.
 
 ## Playlists
 
@@ -53,7 +64,6 @@ Use [playlist-cms.md](playlist-cms.md) for the editorial workflow, ownership, vi
 | --- | --- | --- |
 | Submit podcast | `POST /podcasts/submit` | Ask Listen Notes to add a podcast feed. |
 | Request podcast deletion | `DELETE /podcasts/{id}` | Ask Listen Notes to remove a podcast. |
-| Refresh RSS | `POST /podcasts/{id}/rss` | Ask Listen Notes to refresh a known feed. |
 | Audience demographics | `GET /podcasts/{id}/audience` | Fetch available podcast audience insights. |
 
 Endpoint availability and result limits vary by plan. Read the operation description before promising that a feature is available.

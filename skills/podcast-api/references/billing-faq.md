@@ -4,8 +4,9 @@ Use the live [billing FAQ](https://www.listennotes.com/api/billing-faq/) and [pr
 
 ## Stable Guidance
 
-- A FREE plan is available without a credit card according to the current FAQ.
-- Successful API endpoint responses with HTTP `200` count as API requests. Error responses, `HEAD` requests, image loads, audio playback, and webhook deliveries currently do not count.
+- A FREE plan is available without a credit card for standard API use. On-demand transcription requires an eligible payment method or billing arrangement.
+- Successful API calls returning HTTP `2xx` count toward request quota and billing, including a queued transcription request that returns `202`. `HEAD` requests, errors, image loads, audio playback, direct transcript downloads, and webhook deliveries are exempt.
+- Successful transcription uses the measured audio duration rounded up to a whole minute. Only minutes beyond the included quota incur a transcription fee, billed in the cycle when the job completes. Failed or timed-out jobs incur no transcription fee. Normal API request accounting applies separately. [Transcription billing FAQ](https://www.listennotes.com/api/billing-faq/#faq17)
 - Exceeding FREE quota results in suspension or `429` responses until the billing cycle resets. Paid-plan overage behavior follows current pricing and contract terms.
 - Changing between FREE and PRO does not require a new key unless the key is reset.
 - PRO billing is monthly. Downgrades can cause immediate prorated billing under the current policy.
