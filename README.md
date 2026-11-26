@@ -1,8 +1,50 @@
-# Podcast API Skills
+# Listen Notes Podcast MCP and API Skills
 
-Agent Skills for podcast research and building secure applications with the [Listen Notes Podcast API](https://www.podcastapi.com/).
+**Podcast Search by Listen Notes** is the official hosted MCP server for podcast research. This repository provides connection instructions, MCP Registry metadata, and Agent Skills for research and building applications with the [Listen Notes Podcast API](https://www.podcastapi.com/).
 
 Published by **Listen Notes, Inc.** Questions? Contact [hello@listennotes.com](mailto:hello@listennotes.com).
+
+## Hosted MCP server
+
+Use Listen Notes from GitHub Copilot or another compatible AI assistant to:
+
+- Search podcasts and episodes, find guest interviews, and retrieve podcast and episode metadata.
+- Build PR outreach lists using relevant episodes and available producer contacts.
+- Research brand and competitor mentions in titles, show notes, and indexed transcripts.
+- Read Listen Later playlists and retrieve available episode transcripts.
+
+### Connect
+
+| Setting | Value |
+| --- | --- |
+| Display name | Podcast Search by Listen Notes |
+| Server URL | `https://mcp.listennotes.com/mcp/` |
+| Transport | Streamable HTTP |
+| Authentication | OAuth |
+
+Use a client that supports remote MCP over Streamable HTTP with OAuth. Add the server URL in its MCP or connector settings, complete sign-in with Listen Notes, select a Podcast API app, and approve access. Enable the server's tools in your conversation. No local server installation is required.
+
+You need a [Podcast API account](https://www.listennotes.com/api/pricing/) or access through an API team. The FREE API plan can use MCP within its included quota. MCP is included at no extra charge; Podcast API requests count toward the selected app's existing quota and billing. See [API access information](https://www.listennotes.com/api/mcp/access/).
+
+### GitHub Copilot in VS Code
+
+1. Open the Command Palette and run **MCP: Add Server**. Choose **HTTP**, enter `https://mcp.listennotes.com/mcp/`, and use `listennotes` as the server ID.
+2. Choose where to save the configuration, then follow the startup and OAuth prompts. Sign in to Listen Notes, select your Podcast API app, and approve access.
+3. Open a Copilot chat with the server's tools enabled and try a prompt below.
+
+See [VS Code's MCP setup documentation](https://code.visualstudio.com/docs/agent-customization/mcp-servers) for configuration options and organization requirements. For other clients, see the [Listen Notes MCP setup guides](https://www.listennotes.com/api/mcp/) and [connection instructions](skills/podcast-mcp/references/connection.md).
+
+### Example prompts
+
+- "Use Listen Notes to find five English-language podcasts about bootstrapping a startup that published in the past six months. Recommend an episode from each and include listening links."
+- "Find podcast interviews with Jane Goodall. Check that she was a guest and link each episode."
+- "Find podcast episodes mentioning Cloudflare from the past month. Include publication dates, episode links, and whether each match comes from the title, show notes, or an available transcript."
+
+### Availability and limits
+
+Producer email fields and full transcript retrieval require eligible PRO or ENTERPRISE API access. Contacts and transcripts may be unavailable for individual results. MCP does not generate new transcripts, send outreach emails, or schedule monitoring; arrange recurring searches in your AI client or another service. Playlist tools provide read access.
+
+The [MCP Registry metadata](registry/server.json) describes the hosted server, repository, publisher, setup documentation, and theme-specific logos for compatible discovery catalogs.
 
 ## Choose a skill
 
@@ -14,12 +56,6 @@ Published by **Listen Notes, Inc.** Questions? Contact [hello@listennotes.com](m
 The research skill requires a connected Listen Notes MCP server. Supported MCP Apps clients can display podcast and episode cards with available source/contact links, Listen Notes listening links, and manual audio download links when the server exposes the card tools. Other clients retain text and source links. See [connection instructions](skills/podcast-mcp/references/connection.md).
 
 The developer skill covers endpoint and SDK selection, secure credentials, pagination, mock testing, and API or billing documentation. It also covers using playlists as a headless CMS: create collections, add curator notes, edit entries, and permanently delete collections after confirmation in the application's UI. The MCP server supports playlist reads, not writes.
-
-## Hosted MCP server
-
-Connect to `https://mcp.listennotes.com/mcp/` using Streamable HTTP and complete OAuth in your client. Use your own Podcast API account or API team access and select an existing API app during authorization. See the [connection instructions](skills/podcast-mcp/references/connection.md) for supported setup flows and access requirements.
-
-The [MCP Registry metadata](registry/server.json) describes the hosted server, publisher, setup documentation, and theme-specific logos for compatible discovery catalogs.
 
 ## Install
 

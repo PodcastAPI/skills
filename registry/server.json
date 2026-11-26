@@ -3,7 +3,11 @@
   "name": "com.listennotes/mcp",
   "title": "Podcast Search by Listen Notes",
   "description": "Official podcast search, interview research, PR leads, and media monitoring from Listen Notes.",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "repository": {
+    "url": "https://github.com/PodcastAPI/skills",
+    "source": "github"
+  },
   "websiteUrl": "https://www.listennotes.com/api/mcp/",
   "icons": [
     {
