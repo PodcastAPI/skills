@@ -1,6 +1,6 @@
 ---
 name: podcast-mcp
-description: Research podcasts, find PR leads through available producer contacts, and monitor podcast mentions using the Listen Notes MCP server. Use for guest interviews, brand or competitor mentions, recommendations, episode-count or date filters, playlist reads, and available transcripts, even when Listen Notes is not named. For building REST or SDK integrations, use podcast-api instead.
+description: Research podcasts, find PR leads, monitor podcast mentions, and work with episode transcripts using the Listen Notes MCP server. Use for interviews, recommendations, playlist reads, publisher-provided transcripts, on-demand transcription, and Podcast API billing, even when Listen Notes is not named. For building REST or SDK integrations, use podcast-api instead.
 metadata:
   author: "Listen Notes, Inc."
   contact: "hello@listennotes.com"
@@ -8,13 +8,14 @@ metadata:
 
 # Podcast Search by Listen Notes
 
-This skill supports podcast research, PR lead discovery, and on-demand media monitoring through the connected Listen Notes MCP tools. Respect the user's chosen sources, tools, and connection, including a local development connection. Tool names below are the server's operation names; the client's namespace or server label can differ.
+Use the connected Listen Notes MCP tools for podcast research, PR lead discovery, media monitoring, and on-demand transcription. Respect the user's chosen sources, tools, and connection, including a local development connection. Tool names below are the server's operation names, which clients may namespace or label differently.
 
 ## Connection and workflow selection
 
 - Discover the available Listen Notes tools and their current input schemas. Do not assume that installing this skill also connected the server.
 - If the tools are missing or authorization has expired, follow [connection.md](references/connection.md). Use the client's supported connection and OAuth flow; never request API keys, passwords, or access tokens in chat.
 - Use `get_profile` when the user asks about the connected account, API app, or connection status. It makes no Podcast API request and does not report quota or billing totals. A successful profile call alone does not prove access to every API endpoint.
+- Use `getCurrentBillingCycle` for the connected API account's recorded request charges, transcription usage and charges, and estimated total. It makes no Podcast API request.
 - For an unfamiliar or multi-tool task, call `getWorkflowGuide` without `task` to discover current task IDs, then read the relevant guide. Reuse that guide during the task. Simple searches do not need a guide call every time.
 - Follow the live tool schemas and guide for exact arguments, pagination, and supported capabilities. Use only tools and UI actually exposed by the connected server and client.
 
@@ -25,10 +26,18 @@ This skill supports podcast research, PR lead discovery, and on-demand media mon
 - **PR leads:** discover shows relevant to the user's topic or audience and use available producer contacts for outreach planning. Explain relevance from returned metadata. A contact address does not establish that a show accepts pitches, and a Listen Score is not a guarantee of coverage. Do not send outreach or claim a pitch was delivered.
 - **Media monitoring:** search `type=episode` for a brand, company, competitor, product, or person's name. For verifiable title/description mentions, use `only_in=title,description`; apply the requested publication window and `sort_by_date=1`. Present dates, matching evidence, and source links. Describe these as on-demand search results, with their coverage limits; do not claim every spoken mention was checked or that ongoing monitoring, alerts, or notifications were enabled.
 - **Filter-only requests:** `search` requires a topic or name in `q`. Ask for one, or offer a bounded `getBestPodcasts` selection filtered locally by `total_episodes`. Do not invent a catch-all query or claim a popular-show sample covers the entire catalog.
-- **Known shows, episodes, similarity, playlists, or transcripts:** choose the matching available lookup/recommendation/read tool from its schema or workflow guide. Use returned IDs or supported external identifiers. Prefer `getEpisodeTranscript` when transcript text is requested; transcripts are optional, not a transcription service.
+- **Known shows, episodes, similarity, or playlists:** choose the matching lookup, recommendation, or read tool. Use returned IDs or supported external identifiers.
 - **Time ranges:** calculate relative dates from the current date and user's timezone. Use Unix milliseconds for publication filters and distinguish publication date from recording date.
 
 Ask only for missing information that changes the search. Start with a small relevant result set; fetch selected details only when needed to answer the request.
+
+## Work with transcripts
+
+- For a general request to get a transcript or summarize an episode from its transcript, reuse any known on-demand job. Otherwise try `getEpisodeTranscript` on an eligible PRO or ENTERPRISE plan for publisher-provided text. If the transcript is missing or the plan can't access it, explain which applies and offer on-demand transcription. A lookup error does not prove the transcript is missing.
+- When the user wants a new transcript, call `estimateEpisodeTranscription` for the episode. Show the episode, estimated minutes covered by quota and minutes beyond it, included and remaining quota, estimated cost, and per-minute rate. If duration is unknown, show the quota and rate and say the total is unknown. Explain that measured duration and quota at completion determine the final cost.
+- Ask for explicit approval in chat after showing the estimate, even when the estimate is zero. Call `transcribeEpisode` only after approval, with the same episode ID and `estimate_ref`. Get a fresh estimate and approval if the episode changes, the rate changes, or the estimate expires.
+- Use `getOnDemandTranscription` for an existing job's status and fresh download links. Respect `retry_after` for pending jobs. If submission is uncertain, check status before trying again.
+- Use `listTranscripts` for the account's completed jobs. Share the requested format from each result's `download_urls`. Anyone with a link can download the file until `download_url_expired_date`, 15 minutes after issuance. Refresh selected links with `getOnDemandTranscription` using the returned `episode_id`.
 
 ## Bound requests and handle limitations
 
@@ -56,4 +65,4 @@ Ask only for missing information that changes the search. Start with a small rel
 - Episode cards provide Download audio when a valid audio URL is available and keep Listen on Listen Notes as the final action. The download link opens the returned audio URL for the user to save manually in their browser. Do not promise inline playback, automatic downloads, in-chat transcript display, playlist writes, or fetch-more/similar-item buttons.
 - Let the cards carry the selected result list. Add useful explanation and evidence without repeating every card's metadata in prose. Text-only clients still receive source links and can complete research without cards.
 
-The MCP tools are read-only. Do not claim to edit playlists, send outreach emails, change accounts, create webhooks, transcribe arbitrary audio, or download/process media. Keep API implementation tasks in the separate `podcast-api` workflow. Support contact: [hello@listennotes.com](mailto:hello@listennotes.com).
+Use on-demand transcription for Listen Notes episode IDs. Keep API implementation tasks, including playlist writes and webhook setup, in the separate `podcast-api` workflow. For support, contact [hello@listennotes.com](mailto:hello@listennotes.com).
