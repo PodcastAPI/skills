@@ -26,7 +26,7 @@ If an episode has no existing transcript, use its Listen Notes episode ID to gen
 1. **Estimate** with `GET /episodes/{id}/transcript/estimate`. The estimate uses episode duration metadata and can be `null` when duration is unavailable. It does not reserve included minutes.
 2. **Request** with `POST /episodes/{id}/transcript`. HTTP `202` means queued or processing. HTTP `200` means a completed transcript already exists for your API account. Repeating a pending or completed request for the same episode and account reuses it without another transcription charge.
 3. **Poll** with `GET /episodes/{id}/transcript`. Follow `Retry-After` while pending. A completed job returns signed links in `download_urls` for TXT, SRT, VTT, and word-level JSON. A failed job returns `error.code`.
-4. **List** completed transcripts with `GET /transcripts`. Pass each `next_cursor` into `cursor` until `next_cursor` is `null`. Follow an item's `transcript_url` to poll and obtain fresh download links.
+4. **List** completed transcripts with `GET /transcripts`. Each item includes signed links for the available formats in `download_urls` and their expiry in `download_url_expired_date`. Pass `next_cursor` into `cursor` for more results. To refresh links for one episode, use the item's `episode_id` with `GET /episodes/{id}/transcript`.
 
 For example, estimate transcription from the backend with an existing `EPISODE_ID`:
 

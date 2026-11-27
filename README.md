@@ -12,6 +12,7 @@ Use Listen Notes from GitHub Copilot or another compatible AI assistant to:
 - Build PR outreach lists using relevant episodes and available producer contacts.
 - Research brand and competitor mentions in titles, show notes, and indexed transcripts.
 - Read Listen Later playlists and retrieve available episode transcripts.
+- In clients that expose transcription tools, generate speaker-labeled transcripts on demand after approving an estimate in chat. List or download completed transcripts.
 
 ### Connect
 

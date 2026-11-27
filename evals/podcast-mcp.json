@@ -96,7 +96,74 @@
         "Call justListen exactly once and use that returned episode ID",
         "Use getResultPage for remaining requested transcript chunks instead of refetching the episode",
         "Do not invent missing text or attribute API/plan failures to copyright policy",
+        "If the publisher-provided transcript is unavailable, explain the result and offer to estimate on-demand transcription",
         "If the client's own policy prevents full display, explain whose policy applies and link the returned Listen Notes page without promising an unverified transcript there"
+      ]
+    }
+  },
+  {
+    "id": "estimate-on-demand-transcription",
+    "prompt": "Generate a transcript for this episode.",
+    "context": "The user supplies a Listen Notes episode ID. There is no known on-demand job and the episode has no duration metadata.",
+    "expected": {
+      "activate": true,
+      "tools": ["estimateEpisodeTranscription"],
+      "invariants": [
+        "Show the episode, included and remaining quota, and the per-minute rate",
+        "Say the total charge is unknown when duration is unavailable",
+        "Wait for explicit approval in chat after presenting the estimate before calling transcribeEpisode"
+      ]
+    }
+  },
+  {
+    "id": "approve-on-demand-transcription",
+    "prompt": "Yes, start transcription for that episode.",
+    "context": "The assistant just showed the episode, estimated zero charge, per-minute rate, and quota. Its estimate_ref is still valid.",
+    "expected": {
+      "activate": true,
+      "tools": ["transcribeEpisode"],
+      "invariants": [
+        "Submit once with the approved episode ID and its exact estimate_ref",
+        "If the rate changes or the estimate expires, present a fresh estimate and ask again"
+      ]
+    }
+  },
+  {
+    "id": "decline-on-demand-transcription",
+    "prompt": "No, please don't start the transcription.",
+    "context": "The assistant has presented a transcription estimate and no job has started.",
+    "expected": {
+      "activate": true,
+      "tools": [],
+      "invariants": [
+        "Acknowledge the decline and stop before submission"
+      ]
+    }
+  },
+  {
+    "id": "list-completed-transcripts",
+    "prompt": "Show my completed transcriptions with SRT download links.",
+    "context": "The connected account has completed on-demand transcripts. The list can span multiple pages with signed downloads.",
+    "expected": {
+      "activate": true,
+      "tools": ["listTranscripts"],
+      "invariants": [
+        "Share the returned download_urls.srt for each selected transcript",
+        "Finish any needed getResultPage chunks before advancing with data.next_cursor",
+        "Give the expiration time, and use getOnDemandTranscription only when fresh links are needed for a selected episode"
+      ]
+    }
+  },
+  {
+    "id": "current-transcription-billing",
+    "prompt": "How much have I spent this cycle, and how many transcription minutes do I have left?",
+    "context": "The current MCP connection has access to the user's API account.",
+    "expected": {
+      "activate": true,
+      "tools": ["getCurrentBillingCycle"],
+      "invariants": [
+        "Show the account's recorded API request charges, transcription charges, and remaining minutes",
+        "Describe the total as an estimate and use the billing data's update time"
       ]
     }
   },
@@ -172,13 +239,13 @@
   {
     "id": "unsupported-mcp-playlist-write",
     "prompt": "Using the connected Listen Notes MCP, add these episodes to my playlist.",
-    "context": "Only the current read-only MCP tools are available.",
+    "context": "The connected MCP server supports playlist reads and on-demand transcription.",
     "expected": {
       "activate": true,
       "tools": [],
       "invariants": [
         "Explain that the current MCP cannot modify playlists",
-        "Do not invent a write tool, claim the change succeeded, or request an API key to bypass the MCP boundary"
+        "Do not invent a playlist write tool, claim the change succeeded, or request an API key to bypass the MCP boundary"
       ]
     }
   },

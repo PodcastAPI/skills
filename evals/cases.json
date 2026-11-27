@@ -45,6 +45,20 @@
     }
   },
   {
+    "id": "list-completed-transcript-downloads",
+    "prompt": "Build a page that lets users download the completed transcripts for our API account.",
+    "context": "An application backend already authenticates Podcast API requests.",
+    "expected": {
+      "endpoint": "GET /transcripts",
+      "invariants": [
+        "Use download_urls and download_url_expired_date directly from each list item",
+        "Paginate with next_cursor and stop when it is null",
+        "Refresh an expired link via GET /episodes/{id}/transcript using the item's episode_id",
+        "Keep the API key on the server and share signed links only with intended recipients"
+      ]
+    }
+  },
+  {
     "id": "mock-server-test",
     "prompt": "Write integration tests for our Podcast API client without using our paid quota.",
     "context": "Any server-side application",

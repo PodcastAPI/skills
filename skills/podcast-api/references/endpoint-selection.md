@@ -39,7 +39,7 @@ Use this map to find a likely operation, then verify its exact contract in the l
 | Estimate transcription | `GET /episodes/{id}/transcript/estimate` | Estimate minutes and fees before submitting a request. |
 | Request transcription | `POST /episodes/{id}/transcript` | Generate a transcript for a Listen Notes episode ID. |
 | Poll transcription | `GET /episodes/{id}/transcript` | Check status and get fresh signed download links when complete. |
-| List completed transcripts | `GET /transcripts` | Page through transcripts generated for your API account. |
+| List completed transcripts | `GET /transcripts` | Page through completed transcripts and their signed downloads for your API account. |
 
 Read [playlists-and-media.md](playlists-and-media.md#on-demand-transcription) for setup, polling, and downloads.
 
